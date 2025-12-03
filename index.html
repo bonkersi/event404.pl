@@ -19,50 +19,55 @@
             align-items: center;
             justify-content: center;
             font-family: monospace;
-            padding: 15px;
+            padding: 10px;
             overflow: hidden;
         }
         
-        /* KONTENER */
+        /* GŁÓWNY KONTENER - NAPRAWIONE */
         .container {
             width: 100%;
+            max-width: 100%;
             text-align: center;
-            padding: 10px;
+            padding: 5px;
         }
         
-        /* STARY BUDZIK CYFROWY - BIAŁE CYFRY */
+        /* ZEGAR - KOMPAKTOWY, NIE ROZJECHANY */
         .digital-clock {
             display: inline-block;
             background: #0a0a0a;
-            border: 8px solid #222222;
-            border-radius: 5px;
-            padding: 20px 25px;
+            border: 6px solid #1a1a1a;
+            border-radius: 4px;
+            padding: 12px 15px;
             box-shadow: 
-                inset 0 0 30px rgba(0, 0, 0, 0.9),
-                0 0 40px rgba(255, 255, 255, 0.05);
+                inset 0 0 20px rgba(0, 0, 0, 0.9),
+                0 0 20px rgba(255, 255, 255, 0.03);
+            max-width: 95%;
+            margin: 0 auto;
         }
         
-        /* WYŚWIETLACZ - BIAŁE CYFRY */
+        /* WYŚWIETLACZ - MNIEJ JASNY, KOMPAKTOWY */
         .display {
-            font-family: 'Digital-7', 'Segment7', monospace;
-            font-size: clamp(2.8rem, 9vw, 6rem);
+            font-family: 'Courier New', 'Digital-7', monospace;
+            font-size: clamp(2rem, 6vw, 4.5rem); /* MNIEJSZE CZCIONKI */
             font-weight: normal;
-            color: #ffffff; /* BIAŁE CYFRY */
-            letter-spacing: 8px;
+            color: #e0e0e0; /* MNIEJ JASNE - SZARO-BIAŁE */
+            letter-spacing: 4px; /* MNIEJSZE ODSTĘPY */
             line-height: 1;
             white-space: nowrap;
             text-shadow: 
-                0 0 5px #ffffff,
-                0 0 10px #ffffff,
-                0 0 15px #ffffff;
+                0 0 3px #e0e0e0,
+                0 0 6px #e0e0e0;
             background: #000000;
-            padding: 15px 20px;
-            border-radius: 3px;
-            border: 2px solid #333333;
+            padding: 10px 12px;
+            border-radius: 2px;
+            border: 1px solid #2a2a2a;
             position: relative;
+            display: inline-block;
+            max-width: 100%;
+            overflow: hidden;
         }
         
-        /* EFEKT EKRANU LCD */
+        /* EFEKT EKRANU */
         .display::before {
             content: '';
             position: absolute;
@@ -71,212 +76,201 @@
             right: 0;
             bottom: 0;
             background: 
-                linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.03) 50%);
-            background-size: 100% 4px;
+                linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.02) 50%);
+            background-size: 100% 3px;
             pointer-events: none;
-            border-radius: 1px;
         }
         
-        /* CYFRY KANCIASTE */
+        /* CYFRY */
         .digit {
             display: inline-block;
             position: relative;
-            font-style: italic;
         }
         
-        /* SEPARATORY - BIAŁE */
+        /* SEPARATORY - MNIEJ JASNE */
         .separator {
-            color: #ffffff; /* BIAŁE */
+            color: #cccccc; /* SZARE */
             animation: blink 1s infinite;
-            margin: 0 5px;
-            position: relative;
-            top: -3px;
-            font-weight: bold;
-            opacity: 0.8;
-        }
-        
-        /* KROPKA PRZED MILISEKUNDAMI - BIAŁA */
-        .dot {
-            color: #ffffff; /* BIAŁA */
             margin: 0 3px;
             position: relative;
-            top: -8px;
-            font-size: 0.8em;
+            top: -1px;
+            font-weight: bold;
+            opacity: 0.7;
+        }
+        
+        /* KROPKA - MNIEJ JASNA */
+        .dot {
+            color: #cccccc; /* SZARE */
+            margin: 0 2px;
+            position: relative;
+            top: -4px;
+            font-size: 0.7em;
+            opacity: 0.7;
+        }
+        
+        /* MILISEKUNDY - MNIEJ JASNE */
+        .milliseconds {
+            font-size: 0.45em; /* MNIEJSZE */
+            color: #bbbbbb; /* SZARO-BIAŁE */
+            margin-left: 3px;
+            text-shadow: 
+                0 0 2px #bbbbbb,
+                0 0 4px #bbbbbb;
+            letter-spacing: 2px; /* MNIEJSZE ODSTĘPY */
+            position: relative;
+            top: -6px;
             opacity: 0.8;
         }
         
-        /* MILISEKUNDY - BIAŁE */
-        .milliseconds {
-            font-size: 0.5em;
-            color: #ffffff; /* BIAŁE */
-            margin-left: 5px;
-            text-shadow: 
-                0 0 3px #ffffff,
-                0 0 6px #ffffff;
-            letter-spacing: 4px;
-            position: relative;
-            top: -10px;
-            opacity: 0.9;
-        }
-        
-        /* ANIMACJE */
+        /* ANIMACJE - SUBTELNIEJSZE */
         @keyframes blink {
-            0%, 100% { opacity: 0.8; }
+            0%, 100% { opacity: 0.7; }
             50% { opacity: 0.3; }
         }
         
         @keyframes flicker {
             0%, 100% { 
-                opacity: 1;
-                text-shadow: 
-                    0 0 5px #ffffff,
-                    0 0 10px #ffffff,
-                    0 0 15px #ffffff;
-            }
-            95% { 
                 opacity: 0.98;
                 text-shadow: 
-                    0 0 4px #ffffff,
-                    0 0 8px #ffffff,
-                    0 0 12px #ffffff;
+                    0 0 3px #e0e0e0,
+                    0 0 6px #e0e0e0;
+            }
+            95% { 
+                opacity: 0.96;
+                text-shadow: 
+                    0 0 2px #e0e0e0,
+                    0 0 4px #e0e0e0;
             }
         }
         
         .display {
-            animation: flicker 0.5s infinite;
+            animation: flicker 1s infinite;
         }
         
-        @keyframes glow {
-            0%, 100% { 
-                text-shadow: 
-                    0 0 5px #ffffff,
-                    0 0 10px #ffffff,
-                    0 0 15px #ffffff;
-            }
-            50% { 
-                text-shadow: 
-                    0 0 8px #ffffff,
-                    0 0 16px #ffffff,
-                    0 0 24px #ffffff;
-            }
-        }
+        /* RESPONSYWNOŚĆ - POPRAWIONA */
         
-        .display {
-            animation: flicker 0.5s infinite, glow 3s infinite;
-        }
-        
-        /* EFEKT KANCIASTYCH SEGMENTÓW */
-        .digit::after {
-            content: '';
-            position: absolute;
-            top: 1px;
-            left: 1px;
-            right: 1px;
-            bottom: 1px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            pointer-events: none;
-        }
-        
-        /* RESPONSYWNOŚĆ */
-        @media (max-width: 768px) {
-            .digital-clock {
-                padding: 15px 20px;
-                border-width: 6px;
-            }
-            
-            .display {
-                font-size: clamp(2.2rem, 7vw, 4rem);
-                letter-spacing: 6px;
-                padding: 12px 15px;
-            }
-            
-            .separator {
-                margin: 0 3px;
-                top: -2px;
-            }
-            
-            .milliseconds {
-                font-size: 0.5em;
-                top: -8px;
-                letter-spacing: 3px;
-            }
-            
-            .dot {
-                top: -6px;
-            }
-        }
-        
+        /* TELEFONY MAŁE */
         @media (max-width: 480px) {
             body {
-                padding: 10px;
+                padding: 5px;
             }
             
             .digital-clock {
-                padding: 12px 15px;
+                padding: 8px 10px;
                 border-width: 4px;
-                transform: scale(0.95);
+                max-width: 98%;
             }
             
             .display {
-                font-size: clamp(1.8rem, 6vw, 3rem);
-                letter-spacing: 4px;
-                padding: 10px 12px;
+                font-size: clamp(1.5rem, 5vw, 3rem);
+                letter-spacing: 3px;
+                padding: 6px 8px;
             }
             
             .separator {
                 margin: 0 2px;
-                letter-spacing: 2px;
-            }
-            
-            .milliseconds {
-                font-size: 0.45em;
-                top: -6px;
-                letter-spacing: 2px;
-            }
-            
-            .dot {
-                top: -4px;
-                font-size: 0.7em;
-            }
-        }
-        
-        @media (max-width: 360px) {
-            .digital-clock {
-                transform: scale(0.9);
-                padding: 10px 12px;
-            }
-            
-            .display {
-                font-size: clamp(1.5rem, 5vw, 2.5rem);
-                letter-spacing: 3px;
-                padding: 8px 10px;
+                letter-spacing: 1px;
+                top: 0;
             }
             
             .milliseconds {
                 font-size: 0.4em;
-                top: -5px;
+                top: -4px;
+                letter-spacing: 1px;
+            }
+            
+            .dot {
+                top: -3px;
+                font-size: 0.6em;
             }
         }
         
-        /* FONT CYFROWY */
-        @font-face {
-            font-family: 'Digital-7';
-            src: url('https://fonts.cdnfonts.com/s/8958/digital-7.woff') format('woff');
-            font-weight: normal;
-            font-style: italic;
+        /* TELEFONY BARDZO MAŁE */
+        @media (max-width: 360px) {
+            .digital-clock {
+                padding: 6px 8px;
+                border-width: 3px;
+            }
+            
+            .display {
+                font-size: clamp(1.2rem, 4.5vw, 2.5rem);
+                letter-spacing: 2px;
+                padding: 5px 6px;
+            }
+            
+            .separator {
+                margin: 0 1px;
+                font-size: 0.9em;
+            }
+            
+            .milliseconds {
+                font-size: 0.35em;
+                top: -3px;
+            }
+            
+            .dot {
+                font-size: 0.5em;
+                top: -2px;
+            }
         }
         
-        /* ALTERNATYWNY FONT */
-        @font-face {
-            font-family: 'Segment7';
-            src: url('https://fonts.cdnfonts.com/s/19595/Seven Segment.woff') format('woff');
-            font-weight: normal;
-            font-style: italic;
+        /* TABLETY */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .digital-clock {
+                padding: 10px 12px;
+            }
+            
+            .display {
+                font-size: clamp(1.8rem, 5.5vw, 3.5rem);
+                letter-spacing: 4px;
+                padding: 8px 10px;
+            }
+        }
+        
+        /* KOMPUTERY */
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .digital-clock {
+                padding: 15px 18px;
+                border-width: 6px;
+            }
+            
+            .display {
+                font-size: clamp(2.2rem, 4vw, 4rem);
+                letter-spacing: 5px;
+                padding: 12px 15px;
+            }
+        }
+        
+        /* DUŻE EKRANY */
+        @media (min-width: 1201px) {
+            .digital-clock {
+                padding: 18px 22px;
+                border-width: 8px;
+            }
+            
+            .display {
+                font-size: clamp(2.5rem, 3vw, 4.5rem);
+                letter-spacing: 6px;
+                padding: 15px 18px;
+            }
+        }
+        
+        /* ORIENTACJA POZIOMA */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .digital-clock {
+                padding: 8px 10px;
+                transform: scale(0.9);
+            }
+            
+            .display {
+                font-size: clamp(1.5rem, 4vw, 3rem);
+                letter-spacing: 3px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- STARY BUDZIK CYFROWY - BIAŁE CYFRY -->
+    <!-- ZEGAR - NAPRAWIONY LAYOUT -->
     <div class="container">
         <div class="digital-clock">
             <div class="display">
@@ -298,12 +292,9 @@
         // KONFIGURACJA - 14 DNI
         // ============================================
         
-        // Ustaw czas odliczania: 14 dni od teraz
         const targetDate = new Date();
         targetDate.setDate(targetDate.getDate() + 14);
         targetDate.setHours(23, 59, 59, 999);
-        
-        console.log('STARY BUDZIK CYFROWY - BIAŁE CYFRY - 14 DNI');
         
         // ============================================
         // ELEMENTY DOM
@@ -315,6 +306,7 @@
         const secondsElement = document.getElementById('seconds');
         const millisecondsElement = document.getElementById('milliseconds');
         const display = document.querySelector('.display');
+        const clock = document.querySelector('.digital-clock');
         
         // ============================================
         // FUNKCJE POMOCNICZE
@@ -328,6 +320,44 @@
             if (num < 10) return '00' + num;
             if (num < 100) return '0' + num;
             return num;
+        }
+        
+        // ============================================
+        // FUNKCJA AUTOMATYCZNEGO DOPASOWANIA
+        // ============================================
+        
+        function adjustClock() {
+            const displayWidth = display.scrollWidth;
+            const clockWidth = clock.offsetWidth;
+            const screenWidth = window.innerWidth;
+            
+            // Jeśli tekst jest za szeroki
+            if (displayWidth > clockWidth * 0.95) {
+                // Pobierz aktualny rozmiar czcionki
+                const currentSize = parseFloat(getComputedStyle(display).fontSize);
+                
+                // Oblicz nowy rozmiar (90% aktualnego lub proporcjonalnie)
+                const scaleFactor = (clockWidth * 0.9) / displayWidth;
+                const newSize = Math.min(currentSize * 0.9, currentSize * scaleFactor);
+                
+                // Zastosuj nowy rozmiar
+                display.style.fontSize = newSize + 'px';
+                
+                // Dostosuj też milisekundy
+                const msSize = newSize * 0.45;
+                document.querySelector('.milliseconds').style.fontSize = msSize + 'px';
+                
+                // Dostosuj kropkę
+                document.querySelector('.dot').style.fontSize = (newSize * 0.7) + 'px';
+            }
+            
+            // Dla bardzo małych ekranów
+            if (screenWidth < 400) {
+                clock.style.padding = '6px 8px';
+                display.style.padding = '5px 6px';
+                display.style.letterSpacing = '2px';
+                document.querySelector('.milliseconds').style.letterSpacing = '1px';
+            }
         }
         
         // ============================================
@@ -349,22 +379,10 @@
                 secondsElement.textContent = '00';
                 millisecondsElement.textContent = '000';
                 
-                // Efekt końcowy - intensywne białe miganie
+                // Efekt końcowy
+                display.style.color = '#ff4444';
+                display.style.textShadow = '0 0 5px #ff4444, 0 0 10px #ff4444';
                 display.style.animation = 'none';
-                display.style.color = '#ffffff';
-                display.style.textShadow = 
-                    '0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ffffff';
-                
-                // Intensywne miganie
-                let blinkCount = 0;
-                const blinkInterval = setInterval(() => {
-                    display.style.opacity = display.style.opacity === '0.2' ? '1' : '0.2';
-                    blinkCount++;
-                    if (blinkCount > 12) {
-                        clearInterval(blinkInterval);
-                        display.style.opacity = '1';
-                    }
-                }, 150);
                 
                 // Przekieruj po 3 sekundach
                 setTimeout(() => {
@@ -392,7 +410,7 @@
             const separators = document.querySelectorAll('.separator');
             if (seconds % 2 === 0) {
                 separators.forEach(sep => {
-                    sep.style.opacity = '0.8';
+                    sep.style.opacity = '0.7';
                 });
             } else {
                 separators.forEach(sep => {
@@ -401,114 +419,52 @@
             }
             
             // Efekt migania milisekund
-            if (milliseconds % 150 < 75) {
-                millisecondsElement.style.opacity = '0.8';
-            } else {
-                millisecondsElement.style.opacity = '1';
-            }
-            
-            // Losowy efekt starego wyświetlacza (białe zakłócenia)
-            if (Math.random() > 0.98) {
-                const digits = document.querySelectorAll('.digit');
-                const randomDigit = digits[Math.floor(Math.random() * digits.length)];
-                const originalText = randomDigit.textContent;
-                
-                // Tymczasowo zmień cyfrę (efekt zakłóceń)
-                randomDigit.textContent = Math.floor(Math.random() * 10);
-                randomDigit.style.color = '#cccccc';
-                randomDigit.style.textShadow = '0 0 8px #cccccc';
-                
-                setTimeout(() => {
-                    randomDigit.textContent = originalText;
-                    randomDigit.style.color = '';
-                    randomDigit.style.textShadow = '';
-                }, 40);
-            }
+            millisecondsElement.style.opacity = (milliseconds % 200 < 100) ? '0.7' : '1';
         }
         
         // ============================================
         // INICJALIZACJA
         // ============================================
         
-        // Uruchom zegar
         let countdownInterval;
         
         function startCountdown() {
-            if (countdownInterval) {
-                clearInterval(countdownInterval);
-            }
-            
+            if (countdownInterval) clearInterval(countdownInterval);
             countdownInterval = setInterval(updateCountdown, 10);
             updateCountdown();
         }
         
-        window.addEventListener('load', startCountdown);
-        setTimeout(startCountdown, 100);
+        // Start
+        window.addEventListener('load', () => {
+            startCountdown();
+            // Dopasuj rozmiar po załadowaniu
+            setTimeout(adjustClock, 100);
+            setTimeout(adjustClock, 500);
+        });
+        
+        // Dopasuj przy zmianie rozmiaru
+        window.addEventListener('resize', () => {
+            setTimeout(adjustClock, 100);
+        });
+        
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                adjustClock();
+                startCountdown();
+            }, 300);
+        });
+        
+        // Regularne dostosowanie (co 5 sekund)
+        setInterval(adjustClock, 5000);
         
         // ============================================
-        // DOSTOSOWANIE ROZMIARU
+        // EFEKTY DODATKOWE
         // ============================================
         
-        function adjustSize() {
-            const clock = document.querySelector('.digital-clock');
-            const screenWidth = window.innerWidth;
-            
-            if (screenWidth < 400) {
-                clock.style.transform = 'scale(0.9)';
-            } else if (screenWidth < 480) {
-                clock.style.transform = 'scale(0.95)';
-            } else {
-                clock.style.transform = 'scale(1)';
-            }
-        }
-        
-        window.addEventListener('resize', adjustSize);
-        setTimeout(adjustSize, 500);
-        
-        // ============================================
-        // EFEKTY DODATKOWE - BIAŁE
-        // ============================================
-        
-        // Efekt starego monitora (białe linie skanowania)
+        // Subtelne zmiany jasności
         setInterval(() => {
-            if (Math.random() > 0.7) {
-                const scanLine = document.createElement('div');
-                scanLine.style.position = 'absolute';
-                scanLine.style.top = '0';
-                scanLine.style.left = '0';
-                scanLine.style.right = '0';
-                scanLine.style.height = '1px';
-                scanLine.style.background = 'linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent)';
-                scanLine.style.pointerEvents = 'none';
-                scanLine.style.zIndex = '10';
-                scanLine.style.animation = 'scan 1s linear';
-                
-                display.appendChild(scanLine);
-                
-                setTimeout(() => {
-                    if (scanLine.parentNode) {
-                        scanLine.parentNode.removeChild(scanLine);
-                    }
-                }, 1000);
-            }
-        }, 2000);
-        
-        // Dodaj animację skanowania
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes scan {
-                0% { top: 0; opacity: 0; }
-                10% { opacity: 0.2; }
-                90% { opacity: 0.2; }
-                100% { top: 100%; opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Efekt pulsowania białego światła
-        setInterval(() => {
-            const intensity = 0.9 + Math.random() * 0.2;
-            display.style.filter = `brightness(${intensity})`;
+            const brightness = 0.95 + Math.random() * 0.1;
+            display.style.filter = `brightness(${brightness})`;
         }, 3000);
         
     </script>

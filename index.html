@@ -14,72 +14,75 @@
         
         body {
             background: #000000;
-            color: #ffffff;
+            color: #00ff00;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Arial', sans-serif;
-            padding: 20px;
+            font-family: 'Courier New', monospace;
+            padding: 10px;
             overflow: hidden;
         }
         
-        /* KONTENER GŁÓWNY - CENTRUJEMY */
+        /* KONTENER - ZAWSZE W JEDNEJ LINII */
         .clock-container {
-            text-align: center;
             width: 100%;
-        }
-        
-        /* STYL CZASU - JAK CYFROWY BUDZIK */
-        .digital-clock {
-            font-family: 'LCD', 'Digital-7', 'Courier New', monospace;
-            font-size: 12rem;
-            font-weight: 400;
-            color: #00ff00;
-            letter-spacing: 20px;
             text-align: center;
-            line-height: 1;
-            margin: 0 auto;
-            text-shadow: 
-                0 0 5px #00ff00,
-                0 0 10px #00ff00,
-                0 0 15px #00ff00,
-                0 0 20px #00ff00;
-            display: inline-block;
-            padding: 10px 30px;
-            background: rgba(0, 0, 0, 0.7);
+            white-space: nowrap; /* ZABLOKUJ ZAWIJANIE */
+            overflow-x: auto; /* POZWÓŁ NA PRZEWIJANIE POZIOME */
+            overflow-y: hidden;
+            padding: 10px 0;
         }
         
-        /* SEPARATORY (dwukropki) */
+        /* HACK dla WebKit - ukryj paski przewijania ale zachowaj funkcjonalność */
+        .clock-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* ZEGAR - ZAWSZE W JEDNEJ LINII */
+        .digital-clock {
+            display: inline-block; /* ZAWSZE W LINII */
+            font-family: 'Courier New', monospace;
+            font-size: 8vw; /* ROZMIAR WZGLĘDEM SZEROKOŚCI EKRANU */
+            font-weight: bold;
+            color: #00ff00;
+            letter-spacing: 0.5vw;
+            line-height: 1;
+            text-shadow: 
+                0 0 1vw #00ff00,
+                0 0 2vw #00ff00,
+                0 0 3vw #00ff00;
+            padding: 2vw;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 1vw;
+            min-width: min-content; /* NIE DZIEL NA LINIE */
+        }
+        
+        /* SEPARATORY */
         .separator {
             color: #00ff00;
             animation: blink 1s infinite;
-            position: relative;
-            top: -5px;
+            display: inline-block;
         }
         
         /* MILISEKUNDY - W TEJ SAMEJ LINII */
         .milliseconds {
-            font-size: 4rem;
+            font-size: 3vw;
             color: #00ff00;
             display: inline-block;
-            position: relative;
-            top: -35px;
-            letter-spacing: 8px;
+            letter-spacing: 0.3vw;
             text-shadow: 
-                0 0 3px #00ff00,
-                0 0 6px #00ff00;
+                0 0 0.5vw #00ff00,
+                0 0 1vw #00ff00;
         }
         
         /* KROPKA PRZED MILISEKUNDAMI */
         .dot {
             color: #00ff00;
-            font-size: 4rem;
+            font-size: 3vw;
             display: inline-block;
-            position: relative;
-            top: -35px;
-            margin: 0 5px;
-            text-shadow: 0 0 5px #00ff00;
+            margin: 0 0.5vw;
+            text-shadow: 0 0 0.5vw #00ff00;
         }
         
         /* ANIMACJE */
@@ -89,160 +92,109 @@
         }
         
         @keyframes glow {
-            0%, 100% { text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00; }
-            50% { text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00; }
+            0%, 100% { text-shadow: 0 0 1vw #00ff00, 0 0 2vw #00ff00; }
+            50% { text-shadow: 0 0 2vw #00ff00, 0 0 4vw #00ff00, 0 0 6vw #00ff00; }
         }
         
         .digital-clock {
             animation: glow 3s infinite;
         }
         
-        /* RESPONSYWNOŚĆ */
-        @media (max-width: 1400px) {
+        /* STYLE DLA DUŻYCH EKRANÓW */
+        @media (min-width: 1200px) {
             .digital-clock {
-                font-size: 10rem;
-                letter-spacing: 18px;
-            }
-            .milliseconds {
-                font-size: 3.5rem;
-                top: -30px;
-            }
-            .dot {
-                font-size: 3.5rem;
-                top: -30px;
-            }
-        }
-        
-        @media (max-width: 1200px) {
-            .digital-clock {
-                font-size: 9rem;
-                letter-spacing: 16px;
-            }
-            .milliseconds {
-                font-size: 3rem;
-                top: -25px;
-                letter-spacing: 6px;
-            }
-            .dot {
-                font-size: 3rem;
-                top: -25px;
-            }
-        }
-        
-        @media (max-width: 1000px) {
-            .digital-clock {
-                font-size: 7rem;
-                letter-spacing: 14px;
-            }
-            .milliseconds {
-                font-size: 2.5rem;
-                top: -20px;
-                letter-spacing: 5px;
-            }
-            .dot {
-                font-size: 2.5rem;
-                top: -20px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .digital-clock {
-                font-size: 5.5rem;
-                letter-spacing: 10px;
-                padding: 5px 15px;
+                font-size: 6rem;
+                letter-spacing: 1rem;
+                padding: 1.5rem;
             }
             .milliseconds {
                 font-size: 2rem;
-                top: -15px;
-                letter-spacing: 4px;
+                letter-spacing: 0.2rem;
             }
             .dot {
                 font-size: 2rem;
-                top: -15px;
-            }
-            .separator {
-                top: -3px;
             }
         }
         
-        @media (max-width: 600px) {
+        /* STYLE DLA TABLETÓW */
+        @media (max-width: 768px) and (min-width: 481px) {
             .digital-clock {
-                font-size: 4.5rem;
-                letter-spacing: 8px;
+                font-size: 7vw;
+                letter-spacing: 0.6vw;
             }
             .milliseconds {
-                font-size: 1.6rem;
-                top: -12px;
-                letter-spacing: 3px;
+                font-size: 2.5vw;
             }
             .dot {
-                font-size: 1.6rem;
-                top: -12px;
-            }
-            body {
-                padding: 15px;
+                font-size: 2.5vw;
             }
         }
         
+        /* STYLE DLA TELEFONÓW - NAJWAŻNIEJSZE */
         @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
             .digital-clock {
-                font-size: 3.5rem;
-                letter-spacing: 6px;
+                font-size: 9vw; /* WIĘKSZE NA TELEFONACH */
+                letter-spacing: 0.4vw;
+                padding: 3vw;
+                white-space: nowrap; /* ZAWSZE W LINII */
+                display: inline-block;
             }
+            
             .milliseconds {
-                font-size: 1.3rem;
-                top: -10px;
-                letter-spacing: 2px;
+                font-size: 3.5vw;
+                letter-spacing: 0.2vw;
             }
+            
             .dot {
-                font-size: 1.3rem;
-                top: -10px;
+                font-size: 3.5vw;
             }
-            .separator {
-                letter-spacing: 2px;
-                top: -2px;
+            
+            /* ZAPEWNIJ ŻE NIE BĘDZIE ZAWIJAĆ */
+            .clock-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch; /* PŁYNNE PRZEWIJANIE NA IOS */
             }
         }
         
+        /* STYLE DLA BARDZO MAŁYCH TELEFONÓW */
         @media (max-width: 360px) {
             .digital-clock {
-                font-size: 3rem;
-                letter-spacing: 5px;
+                font-size: 10vw;
+                letter-spacing: 0.3vw;
             }
+            
             .milliseconds {
-                font-size: 1.1rem;
-                top: -8px;
-                letter-spacing: 1px;
+                font-size: 4vw;
             }
+            
             .dot {
-                font-size: 1.1rem;
-                top: -8px;
+                font-size: 4vw;
             }
         }
         
-        /* STYL DLA WYSOKICH EKRANÓW */
-        @media (min-height: 900px) and (min-width: 1200px) {
+        /* STYLE DORIENTACJI POZIOMEJ */
+        @media (orientation: landscape) and (max-height: 600px) {
             .digital-clock {
-                font-size: 14rem;
-                letter-spacing: 25px;
+                font-size: 5vw;
             }
+            
             .milliseconds {
-                font-size: 4.5rem;
-                top: -40px;
-                letter-spacing: 10px;
+                font-size: 2vw;
             }
+            
             .dot {
-                font-size: 4.5rem;
-                top: -40px;
+                font-size: 2vw;
             }
         }
     </style>
-    <!-- Font dla cyfrowego wyglądu -->
-    <link href="https://fonts.cdnfonts.com/css/digital-7" rel="stylesheet">
 </head>
 <body>
     <div class="clock-container">
-        <!-- CYFROWY ZEGAR - JEDNA LINIA -->
+        <!-- ZEGAR - ZAWSZE W JEDNEJ LINII -->
         <div class="digital-clock">
             <span id="days">00</span>
             <span class="separator">:</span>
@@ -310,12 +262,15 @@
                 millisecondsElement.textContent = '000';
                 
                 // Zmień kolor na czerwony
-                document.querySelector('.digital-clock').style.color = '#ff0000';
-                document.querySelector('.digital-clock').style.textShadow = 
-                    '0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000, 0 0 20px #ff0000';
+                const clock = document.querySelector('.digital-clock');
+                clock.style.color = '#ff0000';
+                clock.style.textShadow = 
+                    '0 0 1vw #ff0000, 0 0 2vw #ff0000, 0 0 3vw #ff0000';
+                
                 document.querySelectorAll('.separator').forEach(el => {
                     el.style.color = '#ff0000';
                 });
+                
                 document.querySelector('.milliseconds').style.color = '#ff0000';
                 document.querySelector('.dot').style.color = '#ff0000';
                 
@@ -349,12 +304,13 @@
             }
             
             // Efekt migania dwukropków co sekundę
+            const separators = document.querySelectorAll('.separator');
             if (seconds % 2 === 0) {
-                document.querySelectorAll('.separator').forEach(el => {
+                separators.forEach(el => {
                     el.style.opacity = '1';
                 });
             } else {
-                document.querySelectorAll('.separator').forEach(el => {
+                separators.forEach(el => {
                     el.style.opacity = '0.7';
                 });
             }
@@ -371,33 +327,63 @@
         updateCountdown();
         
         // ============================================
+        // AUTOMATYCZNE DOSTOSOWANIE DO EKRANU
+        // ============================================
+        
+        function adjustForScreen() {
+            const clock = document.querySelector('.digital-clock');
+            const container = document.querySelector('.clock-container');
+            const screenWidth = window.innerWidth;
+            
+            // Na bardzo wąskich ekranach zmniejszamy odstępy
+            if (screenWidth < 400) {
+                clock.style.letterSpacing = '0.2vw';
+                document.querySelector('.milliseconds').style.letterSpacing = '0.1vw';
+            } else {
+                clock.style.letterSpacing = '0.5vw';
+                document.querySelector('.milliseconds').style.letterSpacing = '0.3vw';
+            }
+            
+            // Sprawdź czy zawartość mieści się w ekranie
+            const clockWidth = clock.offsetWidth;
+            
+            if (clockWidth > screenWidth * 0.95) {
+                // Jeśli za szerokie, zmniejsz czcionkę
+                const currentSize = parseFloat(getComputedStyle(clock).fontSize);
+                const newSize = currentSize * 0.95;
+                clock.style.fontSize = newSize + 'px';
+                
+                // Dostosuj też milisekundy
+                const ms = document.querySelector('.milliseconds');
+                const msCurrentSize = parseFloat(getComputedStyle(ms).fontSize);
+                const msNewSize = msCurrentSize * 0.95;
+                ms.style.fontSize = msNewSize + 'px';
+                document.querySelector('.dot').style.fontSize = msNewSize + 'px';
+            }
+        }
+        
+        // Wywołaj przy ładowaniu i zmianie rozmiaru
+        window.addEventListener('load', adjustForScreen);
+        window.addEventListener('resize', adjustForScreen);
+        window.addEventListener('orientationchange', adjustForScreen);
+        
+        // ============================================
         // DODATKOWE EFEKTY
         // ============================================
         
-        // Losowe zmiany jasności (efekt starego wyświetlacza)
+        // Losowe zmiany jasności
         setInterval(() => {
             const clock = document.querySelector('.digital-clock');
             const brightness = 0.9 + Math.random() * 0.2;
             clock.style.filter = `brightness(${brightness})`;
         }, 3000);
         
-        // Efekt "cyfrowego szumu" na milisekundach
-        setInterval(() => {
-            if (Math.random() > 0.7) {
-                const ms = millisecondsElement.textContent;
-                millisecondsElement.style.letterSpacing = (6 + Math.random() * 4) + 'px';
-                setTimeout(() => {
-                    millisecondsElement.style.letterSpacing = '8px';
-                }, 50);
-            }
-        }, 500);
-        
         // ============================================
         // DEBUG
         // ============================================
-        console.log('CYFROWY BUDZIK: AKTYWNY');
-        console.log('Format: DNI:GODZ:MIN:SEK.MS');
+        console.log('ZEGAR W JEDNEJ LINII: AKTYWNY');
         console.log('Czas docelowy:', targetDate.toLocaleString());
+        console.log('Szerokość ekranu:', window.innerWidth + 'px');
     </script>
 </body>
 </html>

@@ -18,98 +18,191 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Courier New', monospace;
+            font-family: monospace;
             padding: 15px;
             overflow: hidden;
         }
         
-        /* KONTENER - CENTROWANIE */
+        /* KONTENER */
         .container {
             width: 100%;
-            max-width: 100%;
             text-align: center;
             padding: 10px;
         }
         
-        /* ZEGAR CYFROWY - PROSTY, BIAŁY */
+        /* STARY BUDZIK CYFROWY - BIAŁE CYFRY */
         .digital-clock {
             display: inline-block;
-            background: #111111;
-            border: 4px solid #333333;
-            border-radius: 10px;
-            padding: 15px 20px;
+            background: #0a0a0a;
+            border: 8px solid #222222;
+            border-radius: 5px;
+            padding: 20px 25px;
             box-shadow: 
-                inset 0 0 20px rgba(0, 0, 0, 0.8),
-                0 0 30px rgba(255, 255, 255, 0.1);
+                inset 0 0 30px rgba(0, 0, 0, 0.9),
+                0 0 40px rgba(255, 255, 255, 0.05);
         }
         
-        /* CYFRY - BIAŁE, JEDNA LINIA */
-        .time-display {
-            font-family: 'Courier New', monospace;
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            font-weight: bold;
-            color: #ffffff;
-            letter-spacing: 3px;
+        /* WYŚWIETLACZ - BIAŁE CYFRY */
+        .display {
+            font-family: 'Digital-7', 'Segment7', monospace;
+            font-size: clamp(2.8rem, 9vw, 6rem);
+            font-weight: normal;
+            color: #ffffff; /* BIAŁE CYFRY */
+            letter-spacing: 8px;
             line-height: 1;
             white-space: nowrap;
             text-shadow: 
                 0 0 5px #ffffff,
-                0 0 10px #ffffff;
+                0 0 10px #ffffff,
+                0 0 15px #ffffff;
+            background: #000000;
+            padding: 15px 20px;
+            border-radius: 3px;
+            border: 2px solid #333333;
+            position: relative;
         }
         
-        /* SEPARATORY */
+        /* EFEKT EKRANU LCD */
+        .display::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.03) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            border-radius: 1px;
+        }
+        
+        /* CYFRY KANCIASTE */
+        .digit {
+            display: inline-block;
+            position: relative;
+            font-style: italic;
+        }
+        
+        /* SEPARATORY - BIAŁE */
         .separator {
-            color: #ffffff;
+            color: #ffffff; /* BIAŁE */
             animation: blink 1s infinite;
             margin: 0 5px;
+            position: relative;
+            top: -3px;
+            font-weight: bold;
+            opacity: 0.8;
         }
         
-        /* MILISEKUNDY */
+        /* KROPKA PRZED MILISEKUNDAMI - BIAŁA */
+        .dot {
+            color: #ffffff; /* BIAŁA */
+            margin: 0 3px;
+            position: relative;
+            top: -8px;
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+        
+        /* MILISEKUNDY - BIAŁE */
         .milliseconds {
-            font-size: 0.6em;
-            color: #ffffff;
+            font-size: 0.5em;
+            color: #ffffff; /* BIAŁE */
             margin-left: 5px;
             text-shadow: 
                 0 0 3px #ffffff,
                 0 0 6px #ffffff;
-        }
-        
-        /* KROPKA */
-        .dot {
-            color: #ffffff;
-            font-size: 0.6em;
-            margin: 0 2px;
+            letter-spacing: 4px;
+            position: relative;
+            top: -10px;
+            opacity: 0.9;
         }
         
         /* ANIMACJE */
         @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.3; }
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.9; }
+        @keyframes flicker {
+            0%, 100% { 
+                opacity: 1;
+                text-shadow: 
+                    0 0 5px #ffffff,
+                    0 0 10px #ffffff,
+                    0 0 15px #ffffff;
+            }
+            95% { 
+                opacity: 0.98;
+                text-shadow: 
+                    0 0 4px #ffffff,
+                    0 0 8px #ffffff,
+                    0 0 12px #ffffff;
+            }
         }
         
-        .time-display {
-            animation: pulse 2s infinite;
+        .display {
+            animation: flicker 0.5s infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { 
+                text-shadow: 
+                    0 0 5px #ffffff,
+                    0 0 10px #ffffff,
+                    0 0 15px #ffffff;
+            }
+            50% { 
+                text-shadow: 
+                    0 0 8px #ffffff,
+                    0 0 16px #ffffff,
+                    0 0 24px #ffffff;
+            }
+        }
+        
+        .display {
+            animation: flicker 0.5s infinite, glow 3s infinite;
+        }
+        
+        /* EFEKT KANCIASTYCH SEGMENTÓW */
+        .digit::after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            right: 1px;
+            bottom: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: none;
         }
         
         /* RESPONSYWNOŚĆ */
         @media (max-width: 768px) {
             .digital-clock {
-                padding: 12px 15px;
-                border-width: 3px;
+                padding: 15px 20px;
+                border-width: 6px;
             }
             
-            .time-display {
-                font-size: clamp(2rem, 7vw, 4rem);
-                letter-spacing: 2px;
+            .display {
+                font-size: clamp(2.2rem, 7vw, 4rem);
+                letter-spacing: 6px;
+                padding: 12px 15px;
             }
             
             .separator {
                 margin: 0 3px;
+                top: -2px;
+            }
+            
+            .milliseconds {
+                font-size: 0.5em;
+                top: -8px;
+                letter-spacing: 3px;
+            }
+            
+            .dot {
+                top: -6px;
             }
         }
         
@@ -119,44 +212,81 @@
             }
             
             .digital-clock {
-                padding: 10px 12px;
+                padding: 12px 15px;
+                border-width: 4px;
                 transform: scale(0.95);
             }
             
-            .time-display {
+            .display {
                 font-size: clamp(1.8rem, 6vw, 3rem);
-                letter-spacing: 1px;
+                letter-spacing: 4px;
+                padding: 10px 12px;
+            }
+            
+            .separator {
+                margin: 0 2px;
+                letter-spacing: 2px;
             }
             
             .milliseconds {
-                font-size: 0.5em;
+                font-size: 0.45em;
+                top: -6px;
+                letter-spacing: 2px;
+            }
+            
+            .dot {
+                top: -4px;
+                font-size: 0.7em;
             }
         }
         
         @media (max-width: 360px) {
             .digital-clock {
                 transform: scale(0.9);
+                padding: 10px 12px;
+            }
+            
+            .display {
+                font-size: clamp(1.5rem, 5vw, 2.5rem);
+                letter-spacing: 3px;
                 padding: 8px 10px;
             }
             
-            .time-display {
-                font-size: clamp(1.5rem, 5vw, 2.5rem);
+            .milliseconds {
+                font-size: 0.4em;
+                top: -5px;
             }
+        }
+        
+        /* FONT CYFROWY */
+        @font-face {
+            font-family: 'Digital-7';
+            src: url('https://fonts.cdnfonts.com/s/8958/digital-7.woff') format('woff');
+            font-weight: normal;
+            font-style: italic;
+        }
+        
+        /* ALTERNATYWNY FONT */
+        @font-face {
+            font-family: 'Segment7';
+            src: url('https://fonts.cdnfonts.com/s/19595/Seven Segment.woff') format('woff');
+            font-weight: normal;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
-    <!-- ZEGAR -->
+    <!-- STARY BUDZIK CYFROWY - BIAŁE CYFRY -->
     <div class="container">
         <div class="digital-clock">
-            <div class="time-display">
-                <span id="days">00</span>
+            <div class="display">
+                <span class="digit" id="days">00</span>
                 <span class="separator">:</span>
-                <span id="hours">00</span>
+                <span class="digit" id="hours">00</span>
                 <span class="separator">:</span>
-                <span id="minutes">00</span>
+                <span class="digit" id="minutes">00</span>
                 <span class="separator">:</span>
-                <span id="seconds">00</span>
+                <span class="digit" id="seconds">00</span>
                 <span class="dot">.</span>
                 <span class="milliseconds" id="milliseconds">000</span>
             </div>
@@ -170,12 +300,10 @@
         
         // Ustaw czas odliczania: 14 dni od teraz
         const targetDate = new Date();
-        targetDate.setDate(targetDate.getDate() + 14); // 14 dni
-        targetDate.setHours(23, 59, 59, 999); // Do końca dnia
+        targetDate.setDate(targetDate.getDate() + 14);
+        targetDate.setHours(23, 59, 59, 999);
         
-        console.log('ZEGAR INICJALIZACJA - 14 DNI');
-        console.log('Czas startu:', new Date().toLocaleString());
-        console.log('Czas docelowy:', targetDate.toLocaleString());
+        console.log('STARY BUDZIK CYFROWY - BIAŁE CYFRY - 14 DNI');
         
         // ============================================
         // ELEMENTY DOM
@@ -186,6 +314,7 @@
         const minutesElement = document.getElementById('minutes');
         const secondsElement = document.getElementById('seconds');
         const millisecondsElement = document.getElementById('milliseconds');
+        const display = document.querySelector('.display');
         
         // ============================================
         // FUNKCJE POMOCNICZE
@@ -211,7 +340,6 @@
             
             // Jeśli czas minął
             if (timeLeft <= 0) {
-                console.log('Czas minął!');
                 clearInterval(countdownInterval);
                 
                 // Ustaw końcowe wartości
@@ -221,17 +349,22 @@
                 secondsElement.textContent = '00';
                 millisecondsElement.textContent = '000';
                 
-                // Zmień kolor na czerwony
-                document.querySelector('.time-display').style.color = '#ff0000';
-                document.querySelector('.time-display').style.textShadow = 
-                    '0 0 10px #ff0000, 0 0 20px #ff0000';
+                // Efekt końcowy - intensywne białe miganie
+                display.style.animation = 'none';
+                display.style.color = '#ffffff';
+                display.style.textShadow = 
+                    '0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ffffff';
                 
-                document.querySelectorAll('.separator').forEach(el => {
-                    el.style.color = '#ff0000';
-                });
-                
-                document.querySelector('.milliseconds').style.color = '#ff0000';
-                document.querySelector('.dot').style.color = '#ff0000';
+                // Intensywne miganie
+                let blinkCount = 0;
+                const blinkInterval = setInterval(() => {
+                    display.style.opacity = display.style.opacity === '0.2' ? '1' : '0.2';
+                    blinkCount++;
+                    if (blinkCount > 12) {
+                        clearInterval(blinkInterval);
+                        display.style.opacity = '1';
+                    }
+                }, 150);
                 
                 // Przekieruj po 3 sekundach
                 setTimeout(() => {
@@ -259,19 +392,37 @@
             const separators = document.querySelectorAll('.separator');
             if (seconds % 2 === 0) {
                 separators.forEach(sep => {
-                    sep.style.opacity = '1';
+                    sep.style.opacity = '0.8';
                 });
             } else {
                 separators.forEach(sep => {
-                    sep.style.opacity = '0.6';
+                    sep.style.opacity = '0.3';
                 });
             }
             
             // Efekt migania milisekund
-            if (milliseconds % 200 < 100) {
-                millisecondsElement.style.opacity = '0.9';
+            if (milliseconds % 150 < 75) {
+                millisecondsElement.style.opacity = '0.8';
             } else {
                 millisecondsElement.style.opacity = '1';
+            }
+            
+            // Losowy efekt starego wyświetlacza (białe zakłócenia)
+            if (Math.random() > 0.98) {
+                const digits = document.querySelectorAll('.digit');
+                const randomDigit = digits[Math.floor(Math.random() * digits.length)];
+                const originalText = randomDigit.textContent;
+                
+                // Tymczasowo zmień cyfrę (efekt zakłóceń)
+                randomDigit.textContent = Math.floor(Math.random() * 10);
+                randomDigit.style.color = '#cccccc';
+                randomDigit.style.textShadow = '0 0 8px #cccccc';
+                
+                setTimeout(() => {
+                    randomDigit.textContent = originalText;
+                    randomDigit.style.color = '';
+                    randomDigit.style.textShadow = '';
+                }, 40);
             }
         }
         
@@ -279,31 +430,19 @@
         // INICJALIZACJA
         // ============================================
         
-        // Sprawdź czy JavaScript działa
-        console.log('JavaScript działa! Rozpoczynam odliczanie 14 dni...');
-        
         // Uruchom zegar
         let countdownInterval;
         
         function startCountdown() {
-            console.log('Uruchamiam odliczanie 14 dni...');
-            
-            // Zatrzymaj istniejący interval jeśli jest
             if (countdownInterval) {
                 clearInterval(countdownInterval);
             }
             
-            // Uruchom nowy interval
             countdownInterval = setInterval(updateCountdown, 10);
-            
-            // Pierwsze wywołanie
             updateCountdown();
         }
         
-        // Start przy załadowaniu strony
         window.addEventListener('load', startCountdown);
-        
-        // Ręczny start po 100ms
         setTimeout(startCountdown, 100);
         
         // ============================================
@@ -312,23 +451,12 @@
         
         function adjustSize() {
             const clock = document.querySelector('.digital-clock');
-            const display = document.querySelector('.time-display');
             const screenWidth = window.innerWidth;
             
-            // Sprawdź czy tekst mieści się
-            const textWidth = display.scrollWidth;
-            const containerWidth = clock.offsetWidth;
-            
-            // Jeśli tekst jest za szeroki, zmniejsz czcionkę
-            if (textWidth > containerWidth * 0.9) {
-                const currentSize = parseFloat(getComputedStyle(display).fontSize);
-                const newSize = currentSize * 0.9;
-                display.style.fontSize = newSize + 'px';
-            }
-            
-            // Dla bardzo małych ekranów
             if (screenWidth < 400) {
                 clock.style.transform = 'scale(0.9)';
+            } else if (screenWidth < 480) {
+                clock.style.transform = 'scale(0.95)';
             } else {
                 clock.style.transform = 'scale(1)';
             }
@@ -338,26 +466,50 @@
         setTimeout(adjustSize, 500);
         
         // ============================================
-        // TEST POPRAWNOŚCI DZIAŁANIA
+        // EFEKTY DODATKOWE - BIAŁE
         // ============================================
         
-        // Test po 2 sekundach
-        setTimeout(() => {
-            const days = parseInt(daysElement.textContent);
-            const seconds = parseInt(secondsElement.textContent);
-            
-            if (days === 13 && seconds < 59) {
-                console.log('OK: Zegar działa poprawnie - liczy 14 dni');
-            } else if (days === 0 && seconds === 0) {
-                console.log('UWAGA: Sprawdź czy JavaScript jest włączony w przeglądarce');
-            } else {
-                console.log('OK: Zegar działa - obecny czas:', 
-                    daysElement.textContent + 'd ' + 
-                    hoursElement.textContent + 'h ' + 
-                    minutesElement.textContent + 'm ' + 
-                    secondsElement.textContent + 's');
+        // Efekt starego monitora (białe linie skanowania)
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                const scanLine = document.createElement('div');
+                scanLine.style.position = 'absolute';
+                scanLine.style.top = '0';
+                scanLine.style.left = '0';
+                scanLine.style.right = '0';
+                scanLine.style.height = '1px';
+                scanLine.style.background = 'linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent)';
+                scanLine.style.pointerEvents = 'none';
+                scanLine.style.zIndex = '10';
+                scanLine.style.animation = 'scan 1s linear';
+                
+                display.appendChild(scanLine);
+                
+                setTimeout(() => {
+                    if (scanLine.parentNode) {
+                        scanLine.parentNode.removeChild(scanLine);
+                    }
+                }, 1000);
             }
         }, 2000);
+        
+        // Dodaj animację skanowania
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes scan {
+                0% { top: 0; opacity: 0; }
+                10% { opacity: 0.2; }
+                90% { opacity: 0.2; }
+                100% { top: 100%; opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Efekt pulsowania białego światła
+        setInterval(() => {
+            const intensity = 0.9 + Math.random() * 0.2;
+            display.style.filter = `brightness(${intensity})`;
+        }, 3000);
         
     </script>
 </body>

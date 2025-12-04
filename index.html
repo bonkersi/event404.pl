@@ -15,7 +15,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #0a0a0f 0%, #0d1525 50%, #071122 100%);
             color: #00ff9d;
             font-family: 'Orbitron', monospace;
             min-height: 100vh;
@@ -28,17 +28,16 @@
         
         .container {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1400px;
             text-align: center;
-            padding: 30px;
-            border: 12px solid;
-            border-image: linear-gradient(45deg, #ff0080, #00ff9d, #0080ff, #ff0080) 1;
-            box-shadow: 
-                0 0 60px rgba(0, 255, 157, 0.3),
-                inset 0 0 40px rgba(0, 255, 157, 0.1);
-            background: rgba(0, 0, 0, 0.85);
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.9);
             position: relative;
             overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 
+                0 0 80px rgba(0, 255, 157, 0.4),
+                inset 0 0 50px rgba(0, 255, 157, 0.1);
         }
         
         .container::before {
@@ -78,36 +77,50 @@
         
         .time-value {
             font-family: 'Share Tech Mono', monospace;
-            font-size: clamp(32px, 8vw, 120px);
+            font-size: clamp(24px, 6vw, 90px);
             font-weight: 700;
-            background: linear-gradient(180deg, #00ff9d 0%, #008a5c 100%);
+            background: linear-gradient(180deg, #00ff9d 0%, #00cc7a 100%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+            text-shadow: 0 0 20px rgba(0, 255, 157, 0.7);
             line-height: 1;
-            padding: 0 5px;
+            padding: 0 3px;
             margin: 0;
-            letter-spacing: -2px;
+            letter-spacing: -1px;
         }
         
         .time-label {
-            font-size: clamp(12px, 1.5vw, 20px);
+            font-size: clamp(10px, 1.2vw, 16px);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 10px;
+            letter-spacing: 1.5px;
+            margin-top: 8px;
             color: #00ff9d;
-            text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+            text-shadow: 0 0 8px rgba(0, 255, 157, 0.5);
         }
         
         .separator {
             font-family: 'Share Tech Mono', monospace;
-            font-size: clamp(32px, 8vw, 120px);
-            color: #ff0080;
-            text-shadow: 0 0 20px rgba(255, 0, 128, 0.7);
+            font-size: clamp(24px, 6vw, 90px);
+            color: #00ff9d;
+            text-shadow: 0 0 15px rgba(0, 255, 157, 0.7);
             line-height: 1;
-            margin: 0 5px;
-            padding-bottom: 10px;
+            margin: 0 2px;
+            padding-bottom: 8px;
+            opacity: 0.8;
+        }
+        
+        .separator-small {
+            font-size: clamp(18px, 4vw, 60px);
+            margin: 0 1px;
+            padding-bottom: 5px;
+            color: #00cc7a;
+        }
+        
+        .milliseconds {
+            font-size: clamp(16px, 3vw, 50px);
+            color: #00cc7a;
+            text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
         }
         
         .scanline {
@@ -118,7 +131,7 @@
             height: 2px;
             background: linear-gradient(to right, transparent, #00ff9d, transparent);
             box-shadow: 0 0 15px #00ff9d;
-            animation: scan 3s linear infinite;
+            animation: scan 2.5s linear infinite;
             z-index: 10;
         }
         
@@ -133,7 +146,7 @@
             height: 100%;
             top: 0;
             left: 0;
-            background: radial-gradient(circle at center, transparent 30%, rgba(0, 255, 157, 0.1) 70%);
+            background: radial-gradient(circle at center, transparent 20%, rgba(0, 255, 157, 0.08) 70%);
             pointer-events: none;
             z-index: -1;
         }
@@ -147,8 +160,8 @@
             left: 0;
             bottom: 0;
             right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 4px, 6px 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(0, 255, 157, 0.03), rgba(0, 200, 120, 0.01), rgba(0, 255, 157, 0.03));
+            background-size: 100% 3px, 4px 100%;
             pointer-events: none;
             z-index: 2;
         }
@@ -156,8 +169,7 @@
         /* Media queries for extreme responsiveness */
         @media screen and (max-width: 768px) {
             .container {
-                padding: 20px;
-                border-width: 8px;
+                padding: 15px;
             }
             
             .clock-container {
@@ -165,12 +177,16 @@
             }
             
             .time-value {
-                padding: 0 3px;
-                letter-spacing: -1px;
+                padding: 0 2px;
+                letter-spacing: -0.5px;
             }
             
             .separator {
-                margin: 0 3px;
+                margin: 0 1px;
+            }
+            
+            .separator-small {
+                margin: 0;
             }
         }
         
@@ -180,8 +196,8 @@
             }
             
             .container {
-                padding: 15px;
-                border-width: 6px;
+                padding: 10px;
+                border-radius: 8px;
             }
             
             .clock-container {
@@ -189,21 +205,33 @@
             }
             
             .time-value {
-                padding: 0 2px;
+                padding: 0 1px;
             }
             
             .separator {
-                margin: 0 2px;
+                margin: 0;
+            }
+            
+            .time-label {
+                margin-top: 5px;
             }
         }
         
         @media screen and (max-width: 320px) {
-            .time-value, .separator {
-                font-size: 28px;
+            .time-value {
+                font-size: 22px;
+            }
+            
+            .separator {
+                font-size: 22px;
+            }
+            
+            .milliseconds {
+                font-size: 16px;
             }
             
             .time-label {
-                font-size: 10px;
+                font-size: 9px;
             }
         }
     </style>
@@ -215,7 +243,7 @@
         
         <div class="clock-container">
             <div class="time-unit">
-                <div class="time-value" id="days">30</div>
+                <div class="time-value" id="days">00</div>
                 <div class="time-label">Dni</div>
             </div>
             
@@ -239,29 +267,38 @@
                 <div class="time-value" id="seconds">00</div>
                 <div class="time-label">Sekund</div>
             </div>
+            
+            <div class="separator separator-small">.</div>
+            
+            <div class="time-unit">
+                <div class="time-value milliseconds" id="milliseconds">000</div>
+                <div class="time-label">Milisekund</div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Ustaw docelową datę i czas odliczania (30 dni od teraz)
-        const targetDate = new Date();
-        targetDate.setDate(targetDate.getDate() + 30);
+        // STAŁA DATA STARTU STRONY DOCELOWEJ
+        // Ustaw tutaj dokładną datę i godzinę kiedy strona ma ruszyć
+        // Format: rok, miesiąc (0-11), dzień, godzina, minuta, sekunda
+        const launchDate = new Date(2025, 2, 15, 12, 0, 0); // 15 marca 2025, 12:00:00
+        
+        // Jeśli chcesz ustawić 30 dni od dzisiaj o tej samej godzinie:
+        // const launchDate = new Date();
+        // launchDate.setDate(launchDate.getDate() + 30);
+        // launchDate.setHours(12, 0, 0, 0); // Ustaw na 12:00:00
         
         // Docelowy URL po zakończeniu odliczania
         const redirectUrl = "https://bonkersi.github.io/BialaJaskolka.pl/";
         
+        // Funkcja obliczająca pozostały czas do uruchomienia
         function updateCountdown() {
             const now = new Date().getTime();
-            const distance = targetDate - now;
+            const distance = launchDate - now;
             
-            // Jeśli odliczanie się zakończyło
+            // Jeśli odliczanie się zakończyło (strona już działa)
             if (distance < 0) {
-                document.getElementById("days").textContent = "00";
-                document.getElementById("hours").textContent = "00";
-                document.getElementById("minutes").textContent = "00";
-                document.getElementById("seconds").textContent = "00";
-                
-                // Przekierowanie na docelową stronę
+                // Natychmiastowe przekierowanie
                 window.location.href = redirectUrl;
                 return;
             }
@@ -271,68 +308,105 @@
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const milliseconds = Math.floor(distance % 1000);
             
             // Aktualizacja wyświetlacza z zerami wiodącymi
             document.getElementById("days").textContent = days.toString().padStart(2, '0');
             document.getElementById("hours").textContent = hours.toString().padStart(2, '0');
             document.getElementById("minutes").textContent = minutes.toString().padStart(2, '0');
             document.getElementById("seconds").textContent = seconds.toString().padStart(2, '0');
+            document.getElementById("milliseconds").textContent = milliseconds.toString().padStart(3, '0');
         }
         
-        // Aktualizacja co sekundę
-        setInterval(updateCountdown, 1000);
+        // Aktualizacja co 10 milisekund dla płynnego odliczania
+        const countdownInterval = setInterval(updateCountdown, 10);
         
         // Inicjalne wywołanie
         updateCountdown();
         
+        // Zapisz aktualny czas do localStorage (opcjonalnie, dla debugowania)
+        localStorage.setItem('countdownStart', new Date().toISOString());
+        localStorage.setItem('countdownTarget', launchDate.toISOString());
+        
         // Obsługa responsywności - zapewnienie, że zegar zawsze się mieści
-        function adjustFontSize() {
+        function adjustClockSize() {
             const clockContainer = document.querySelector('.clock-container');
-            const containerWidth = document.querySelector('.container').offsetWidth;
-            const clockWidth = clockContainer.scrollWidth;
-            
-            // Jeśli szerokość zegara przekracza dostępną przestrzeń
-            if (clockWidth > containerWidth * 0.95) {
-                const timeValues = document.querySelectorAll('.time-value');
-                const separators = document.querySelectorAll('.separator');
-                const currentFontSize = parseFloat(window.getComputedStyle(timeValues[0]).fontSize);
-                const newFontSize = currentFontSize * 0.95;
-                
-                // Zmniejsz rozmiar czcionki
-                timeValues.forEach(el => {
-                    el.style.fontSize = `${newFontSize}px`;
-                });
-                
-                separators.forEach(el => {
-                    el.style.fontSize = `${newFontSize}px`;
-                });
-            }
-        }
-        
-        // Dostosuj po załadowaniu i przy zmianie rozmiaru okna
-        window.addEventListener('load', adjustFontSize);
-        window.addEventListener('resize', adjustFontSize);
-        
-        // Dodatkowa funkcja zapobiegająca przycinaniu
-        function ensureClockFits() {
             const container = document.querySelector('.container');
-            const clockContainer = document.querySelector('.clock-container');
+            
+            if (!clockContainer || !container) return;
             
             // Sprawdź czy zegar wychodzi poza kontener
             if (clockContainer.scrollWidth > container.clientWidth) {
                 // Oblicz współczynnik skalowania
-                const scaleFactor = container.clientWidth / clockContainer.scrollWidth * 0.95;
+                let scaleFactor = container.clientWidth / clockContainer.scrollWidth * 0.95;
+                
+                // Minimalne skalowanie - nie mniej niż 0.4
+                scaleFactor = Math.max(scaleFactor, 0.4);
                 
                 // Zastosuj skalowanie
                 clockContainer.style.transform = `scale(${scaleFactor})`;
+                clockContainer.style.transformOrigin = 'center';
             } else {
                 clockContainer.style.transform = 'scale(1)';
             }
         }
         
-        // Uruchom funkcję dopasowującą przy ładowaniu i zmianie rozmiaru
-        window.addEventListener('load', ensureClockFits);
-        window.addEventListener('resize', ensureClockFits);
+        // Dodatkowa funkcja do dynamicznego dostosowania czcionki
+        function adjustFontSize() {
+            const timeValues = document.querySelectorAll('.time-value:not(.milliseconds)');
+            const milliseconds = document.querySelector('.milliseconds');
+            const separators = document.querySelectorAll('.separator');
+            const container = document.querySelector('.container');
+            
+            if (!timeValues.length || !container) return;
+            
+            const containerWidth = container.clientWidth;
+            const clockContainer = document.querySelector('.clock-container');
+            const clockWidth = clockContainer.scrollWidth;
+            
+            // Jeśli zegar jest za szeroki, zmniejsz czcionkę
+            if (clockWidth > containerWidth * 0.9) {
+                const currentFontSize = parseFloat(window.getComputedStyle(timeValues[0]).fontSize);
+                const newFontSize = Math.max(currentFontSize * 0.9, 16); // Minimalna czcionka 16px
+                
+                timeValues.forEach(el => {
+                    if (!el.classList.contains('milliseconds')) {
+                        el.style.fontSize = `${newFontSize}px`;
+                    }
+                });
+                
+                separators.forEach(el => {
+                    el.style.fontSize = `${newFontSize}px`;
+                });
+                
+                if (milliseconds) {
+                    milliseconds.style.fontSize = `${newFontSize * 0.7}px`;
+                }
+            }
+        }
+        
+        // Dostosuj po załadowaniu i przy zmianie rozmiaru okna
+        window.addEventListener('load', function() {
+            adjustClockSize();
+            adjustFontSize();
+        });
+        
+        window.addEventListener('resize', function() {
+            adjustClockSize();
+            adjustFontSize();
+        });
+        
+        // Automatyczne dostosowanie co sekundę
+        setInterval(adjustClockSize, 1000);
+        
+        // Wyświetl informację o dacie startu w konsoli (dla debugowania)
+        console.log('Strona docelowa uruchomi się:', launchDate.toLocaleString());
+        console.log('Bieżąca data:', new Date().toLocaleString());
+        
+        // Jeśli strona już powinna być dostępna, natychmiast przekieruj
+        if (new Date() >= launchDate) {
+            window.location.href = redirectUrl;
+        }
     </script>
 </body>
 </html>

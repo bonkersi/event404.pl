@@ -18,95 +18,56 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
+            padding: 10px;
         }
         
         .clock-container {
             width: 100%;
             text-align: center;
             white-space: nowrap;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding: 20px 0;
-        }
-        
-        .clock-container::-webkit-scrollbar {
-            display: none;
+            overflow: hidden;
         }
         
         .clock-row {
             display: inline-block;
-            min-width: 100%;
-            text-align: center;
         }
         
-        .lcd-clock {
+        .lcd-display {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             background-color: #000;
-            padding: 10px;
-            gap: 1vw;
-            min-width: 95vw;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 3px solid #333;
+            min-width: 95%;
+            max-width: 100%;
+            flex-wrap: nowrap;
         }
         
-        /* Sprites dla cyfr - generowane z CSS */
-        .digit-sprite {
+        /* Cyfry - będziemy używać obrazków */
+        .digit-img {
             display: inline-block;
-            background-color: #000;
-            position: relative;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
+            vertical-align: middle;
         }
         
-        /* Wspólne cechy cyfr */
-        .digit {
-            position: relative;
-            background: #000;
-            border-radius: 2px;
-        }
+        /* Rozmiary - będą dynamicznie ustawiane przez JS */
         
-        /* Segmenty cyfr 7-segmentowych */
-        .segment {
-            position: absolute;
-            background: #fff;
-            border-radius: 1px;
-        }
-        
-        /* Segmenty poziome (a, d, g) */
-        .segment-h {
-            height: 3%;
-            border-radius: 2px;
-        }
-        
-        /* Segmenty pionowe (b, c, e, f) */
-        .segment-v {
-            width: 3%;
-            border-radius: 2px;
-        }
-        
-        /* Konkretne segmenty dla każdej cyfry będą generowane przez JS */
-        
-        /* Kolon (dwukropek) */
-        .colon-dot {
+        /* Dwukropek jako obrazek */
+        .colon-img {
             display: inline-block;
-            width: 2vw;
-            height: 2vw;
-            background-color: #fff;
-            border-radius: 50%;
-            margin: 0 0.5vw;
-            box-shadow: 0 0 5px #fff;
+            margin: 0 8px;
+            vertical-align: middle;
             animation: blink 1s infinite;
         }
         
         /* Kropka przed milisekundami */
-        .milli-dot {
+        .dot-img {
             display: inline-block;
-            width: 1.5vw;
-            height: 1.5vw;
-            background-color: #fff;
-            border-radius: 50%;
-            margin: 0 0.5vw;
-            box-shadow: 0 0 3px #fff;
+            margin: 0 4px;
+            vertical-align: middle;
         }
         
         @keyframes blink {
@@ -114,39 +75,10 @@
             50% { opacity: 0.3; }
         }
         
-        /* Media queries dla skalowania */
-        @media (max-width: 768px) {
-            .lcd-clock {
-                gap: 0.8vw;
-            }
-            .colon-dot {
-                width: 1.8vw;
-                height: 1.8vw;
-            }
-            .milli-dot {
-                width: 1.3vw;
-                height: 1.3vw;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .lcd-clock {
-                gap: 0.6vw;
-                padding: 5px;
-            }
-            .colon-dot {
-                width: 1.5vw;
-                height: 1.5vw;
-            }
-            .milli-dot {
-                width: 1vw;
-                height: 1vw;
-            }
-        }
-        
-        @media (min-width: 1200px) {
-            .lcd-clock {
-                gap: 0.8vw;
+        /* Dla bardzo małych ekranów */
+        @media (max-width: 320px) {
+            .lcd-display {
+                padding: 8px 12px;
             }
         }
     </style>
@@ -154,8 +86,8 @@
 <body>
     <div class="clock-container">
         <div class="clock-row">
-            <div class="lcd-clock" id="clockDisplay">
-                <!-- Cyfry będą generowane przez JavaScript -->
+            <div class="lcd-display" id="clockDisplay">
+                <!-- Cyfry będą wstawiane przez JavaScript -->
             </div>
         </div>
     </div>
@@ -165,198 +97,292 @@
         const targetTime = new Date().getTime() + (14 * 24 * 60 * 60 * 1000);
         const redirectUrl = "https://bonkersi.github.io/BialaJaskolka.pl/index.html";
         
-        // Definicje segmentów dla każdej cyfry (0-9)
-        const digitSegments = [
-            // 0: a,b,c,d,e,f
-            [1,1,1,1,1,1,0],
-            // 1: b,c
-            [0,1,1,0,0,0,0],
-            // 2: a,b,d,e,g
-            [1,1,0,1,1,0,1],
-            // 3: a,b,c,d,g
-            [1,1,1,1,0,0,1],
-            // 4: b,c,f,g
-            [0,1,1,0,0,1,1],
-            // 5: a,c,d,f,g
-            [1,0,1,1,0,1,1],
-            // 6: a,c,d,e,f,g
-            [1,0,1,1,1,1,1],
-            // 7: a,b,c
-            [1,1,1,0,0,0,0],
-            // 8: wszystkie segmenty
-            [1,1,1,1,1,1,1],
-            // 9: a,b,c,d,f,g
-            [1,1,1,1,0,1,1]
-        ];
+        // Tworzymy cyfry za pomocą Canvas - wyglądające jak na zdjęciu
+        function createDigitImages() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const digits = {};
+            
+            // Rozmiar pojedynczej cyfry
+            const width = 100;
+            const height = 180;
+            canvas.width = width * 10; // 10 cyfr (0-9)
+            canvas.height = height;
+            
+            // Wypełniamy tło czarnym
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Rysujemy każdą cyfrę (0-9)
+            for (let i = 0; i < 10; i++) {
+                const x = i * width;
+                
+                // Biały kolor dla cyfr
+                ctx.fillStyle = '#ffffff';
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 12;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                
+                // Definicje segmentów dla każdej cyfry (7-segment display)
+                const segments = getSegmentsForDigit(i);
+                
+                // Segmenty (a-g)
+                drawSegment(ctx, x, segments[0], 'a', width, height); // górny
+                drawSegment(ctx, x, segments[1], 'b', width, height); // prawy górny
+                drawSegment(ctx, x, segments[2], 'c', width, height); // prawy dolny
+                drawSegment(ctx, x, segments[3], 'd', width, height); // dolny
+                drawSegment(ctx, x, segments[4], 'e', width, height); // lewy dolny
+                drawSegment(ctx, x, segments[5], 'f', width, height); // lewy górny
+                drawSegment(ctx, x, segments[6], 'g', width, height); // środkowy
+            }
+            
+            // Zapisujemy każdą cyfrę jako osobny Data URL
+            for (let i = 0; i < 10; i++) {
+                const tempCanvas = document.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCanvas.width = width;
+                tempCanvas.height = height;
+                
+                // Kopiujemy cyfrę
+                tempCtx.drawImage(canvas, i * width, 0, width, height, 0, 0, width, height);
+                
+                digits[i] = tempCanvas.toDataURL();
+            }
+            
+            return digits;
+        }
         
-        // Funkcja tworząca cyfrę 7-segmentową
-        function createDigit(value, isMillisecond = false) {
-            const segments = digitSegments[value];
-            const digitSize = isMillisecond ? 0.7 : 1;
-            const digitWidth = 8 * digitSize;
-            const digitHeight = 12 * digitSize;
-            const segmentThickness = 1.2 * digitSize;
-            const segmentLength = 6 * digitSize;
+        function getSegmentsForDigit(digit) {
+            // Definicje segmentów dla cyfr 7-segmentowych
+            const segmentMap = {
+                0: [1,1,1,1,1,1,0], // a,b,c,d,e,f
+                1: [0,1,1,0,0,0,0], // b,c
+                2: [1,1,0,1,1,0,1], // a,b,d,e,g
+                3: [1,1,1,1,0,0,1], // a,b,c,d,g
+                4: [0,1,1,0,0,1,1], // b,c,f,g
+                5: [1,0,1,1,0,1,1], // a,c,d,f,g
+                6: [1,0,1,1,1,1,1], // a,c,d,e,f,g
+                7: [1,1,1,0,0,0,0], // a,b,c
+                8: [1,1,1,1,1,1,1], // wszystkie
+                9: [1,1,1,1,0,1,1]  // a,b,c,d,f,g
+            };
+            return segmentMap[digit];
+        }
+        
+        function drawSegment(ctx, xOffset, isOn, segment, width, height) {
+            if (!isOn) return;
             
-            const digitDiv = document.createElement('div');
-            digitDiv.className = 'digit-sprite';
-            digitDiv.style.width = `${digitWidth}vw`;
-            digitDiv.style.height = `${digitHeight}vw`;
+            const padding = 15;
+            const segmentWidth = 12;
+            const w = width - padding * 2;
+            const h = height - padding * 2;
             
-            // Segmenty (a-g)
-            // Segment a (górny)
-            if (segments[0]) {
-                const segment = document.createElement('div');
-                segment.className = 'segment segment-h';
-                segment.style.width = `${segmentLength}vw`;
-                segment.style.height = `${segmentThickness}vw`;
-                segment.style.left = `${(digitWidth - segmentLength) / 2}vw`;
-                segment.style.top = '0';
-                digitDiv.appendChild(segment);
+            ctx.save();
+            ctx.translate(xOffset + padding, padding);
+            
+            switch(segment) {
+                case 'a': // górny
+                    ctx.beginPath();
+                    ctx.moveTo(segmentWidth/2, 0);
+                    ctx.lineTo(w - segmentWidth/2, 0);
+                    ctx.lineTo(w - segmentWidth, segmentWidth);
+                    ctx.lineTo(segmentWidth, segmentWidth);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+                    
+                case 'b': // prawy górny
+                    ctx.beginPath();
+                    ctx.moveTo(w, segmentWidth/2);
+                    ctx.lineTo(w, h/2 - segmentWidth/2);
+                    ctx.lineTo(w - segmentWidth, h/2 - segmentWidth);
+                    ctx.lineTo(w - segmentWidth, segmentWidth);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+                    
+                case 'c': // prawy dolny
+                    ctx.beginPath();
+                    ctx.moveTo(w, h/2 + segmentWidth/2);
+                    ctx.lineTo(w, h - segmentWidth/2);
+                    ctx.lineTo(w - segmentWidth, h - segmentWidth);
+                    ctx.lineTo(w - segmentWidth, h/2 + segmentWidth);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+                    
+                case 'd': // dolny
+                    ctx.beginPath();
+                    ctx.moveTo(segmentWidth/2, h);
+                    ctx.lineTo(w - segmentWidth/2, h);
+                    ctx.lineTo(w - segmentWidth, h - segmentWidth);
+                    ctx.lineTo(segmentWidth, h - segmentWidth);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+                    
+                case 'e': // lewy dolny
+                    ctx.beginPath();
+                    ctx.moveTo(0, h - segmentWidth/2);
+                    ctx.lineTo(0, h/2 + segmentWidth/2);
+                    ctx.lineTo(segmentWidth, h/2 + segmentWidth);
+                    ctx.lineTo(segmentWidth, h - segmentWidth);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+                    
+                case 'f': // lewy górny
+                    ctx.beginPath();
+                    ctx.moveTo(0, segmentWidth/2);
+                    ctx.lineTo(0, h/2 - segmentWidth/2);
+                    ctx.lineTo(segmentWidth, h/2 - segmentWidth);
+                    ctx.lineTo(segmentWidth, segmentWidth);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
+                    
+                case 'g': // środkowy
+                    ctx.beginPath();
+                    ctx.moveTo(segmentWidth/2, h/2);
+                    ctx.lineTo(w - segmentWidth/2, h/2);
+                    ctx.lineTo(w - segmentWidth, h/2 - segmentWidth/2);
+                    ctx.lineTo(w - segmentWidth, h/2 + segmentWidth/2);
+                    ctx.lineTo(w - segmentWidth/2, h/2);
+                    ctx.lineTo(segmentWidth/2, h/2);
+                    ctx.lineTo(segmentWidth, h/2 - segmentWidth/2);
+                    ctx.lineTo(segmentWidth, h/2 + segmentWidth/2);
+                    ctx.closePath();
+                    ctx.fill();
+                    break;
             }
             
-            // Segment b (prawy górny)
-            if (segments[1]) {
-                const segment = document.createElement('div');
-                segment.className = 'segment segment-v';
-                segment.style.width = `${segmentThickness}vw`;
-                segment.style.height = `${segmentLength}vw`;
-                segment.style.right = '0';
-                segment.style.top = `${(digitHeight/2 - segmentLength)/2}vw`;
-                digitDiv.appendChild(segment);
-            }
+            ctx.restore();
+        }
+        
+        // Funkcja tworząca obrazek cyfry
+        function createDigitImage(digit, isSmall = false) {
+            const img = document.createElement('img');
+            img.className = 'digit-img';
+            img.alt = digit;
             
-            // Segment c (prawy dolny)
-            if (segments[2]) {
-                const segment = document.createElement('div');
-                segment.className = 'segment segment-v';
-                segment.style.width = `${segmentThickness}vw`;
-                segment.style.height = `${segmentLength}vw`;
-                segment.style.right = '0';
-                segment.style.bottom = `${(digitHeight/2 - segmentLength)/2}vw`;
-                digitDiv.appendChild(segment);
-            }
+            // Generujemy cyfry
+            const digits = createDigitImages();
+            img.src = digits[digit];
             
-            // Segment d (dolny)
-            if (segments[3]) {
-                const segment = document.createElement('div');
-                segment.className = 'segment segment-h';
-                segment.style.width = `${segmentLength}vw`;
-                segment.style.height = `${segmentThickness}vw`;
-                segment.style.left = `${(digitWidth - segmentLength) / 2}vw`;
-                segment.style.bottom = '0';
-                digitDiv.appendChild(segment);
-            }
+            // Ustawiamy rozmiar
+            const baseSize = isSmall ? 1.5 : 2.5;
+            img.style.width = `${baseSize}vw`;
+            img.style.height = `${baseSize * 1.8}vw`;
+            img.style.minWidth = isSmall ? '20px' : '30px';
+            img.style.maxWidth = isSmall ? '40px' : '80px';
             
-            // Segment e (lewy dolny)
-            if (segments[4]) {
-                const segment = document.createElement('div');
-                segment.className = 'segment segment-v';
-                segment.style.width = `${segmentThickness}vw`;
-                segment.style.height = `${segmentLength}vw`;
-                segment.style.left = '0';
-                segment.style.bottom = `${(digitHeight/2 - segmentLength)/2}vw`;
-                digitDiv.appendChild(segment);
-            }
-            
-            // Segment f (lewy górny)
-            if (segments[5]) {
-                const segment = document.createElement('div');
-                segment.className = 'segment segment-v';
-                segment.style.width = `${segmentThickness}vw`;
-                segment.style.height = `${segmentLength}vw`;
-                segment.style.left = '0';
-                segment.style.top = `${(digitHeight/2 - segmentLength)/2}vw`;
-                digitDiv.appendChild(segment);
-            }
-            
-            // Segment g (środkowy)
-            if (segments[6]) {
-                const segment = document.createElement('div');
-                segment.className = 'segment segment-h';
-                segment.style.width = `${segmentLength}vw`;
-                segment.style.height = `${segmentThickness}vw`;
-                segment.style.left = `${(digitWidth - segmentLength) / 2}vw`;
-                segment.style.top = '50%';
-                segment.style.transform = 'translateY(-50%)';
-                digitDiv.appendChild(segment);
-            }
-            
-            return digitDiv;
+            return img;
         }
         
         // Funkcja tworząca dwukropek
         function createColon() {
-            const colonDiv = document.createElement('div');
-            colonDiv.className = 'colon-container';
-            colonDiv.style.display = 'inline-flex';
-            colonDiv.style.flexDirection = 'column';
-            colonDiv.style.justifyContent = 'space-between';
-            colonDiv.style.alignItems = 'center';
-            colonDiv.style.height = '12vw';
-            colonDiv.style.margin = '0 0.5vw';
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 30;
+            canvas.height = 100;
             
-            const dot1 = document.createElement('div');
-            dot1.className = 'colon-dot';
+            // Czarny background
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            const dot2 = document.createElement('div');
-            dot2.className = 'colon-dot';
+            // Dwie białe kropki
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(canvas.width/2, canvas.height * 0.35, 6, 0, Math.PI * 2);
+            ctx.fill();
             
-            colonDiv.appendChild(dot1);
-            colonDiv.appendChild(dot2);
+            ctx.beginPath();
+            ctx.arc(canvas.width/2, canvas.height * 0.65, 6, 0, Math.PI * 2);
+            ctx.fill();
             
-            return colonDiv;
+            const img = document.createElement('img');
+            img.className = 'colon-img';
+            img.src = canvas.toDataURL();
+            img.style.width = '0.8vw';
+            img.style.height = '2.5vw';
+            img.style.minWidth = '10px';
+            img.style.maxWidth = '20px';
+            
+            return img;
         }
         
-        // Funkcja tworząca kropkę przed milisekundami
-        function createMilliDot() {
-            const dot = document.createElement('div');
-            dot.className = 'milli-dot';
-            return dot;
+        // Funkcja tworząca kropkę
+        function createDot(isSmall = false) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const size = isSmall ? 20 : 30;
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Czarny background
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Biała kropka
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, isSmall ? 4 : 6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            const img = document.createElement('img');
+            img.className = 'dot-img';
+            img.src = canvas.toDataURL();
+            img.style.width = isSmall ? '0.5vw' : '0.8vw';
+            img.style.height = isSmall ? '0.5vw' : '0.8vw';
+            img.style.minWidth = '6px';
+            img.style.maxWidth = '12px';
+            
+            return img;
         }
         
-        // Funkcja tworząca cały wyświetlacz
-        function createClockDisplay(days, hours, minutes, seconds, milliseconds) {
-            const clockDiv = document.getElementById('clockDisplay');
-            clockDiv.innerHTML = '';
+        // Funkcja tworząca i aktualizująca wyświetlacz
+        function updateDisplay(days, hours, minutes, seconds, milliseconds) {
+            const display = document.getElementById('clockDisplay');
+            display.innerHTML = '';
             
             // Dni (2 cyfry)
             const daysStr = days.toString().padStart(2, '0');
-            clockDiv.appendChild(createDigit(parseInt(daysStr[0])));
-            clockDiv.appendChild(createDigit(parseInt(daysStr[1])));
+            display.appendChild(createDigitImage(parseInt(daysStr[0])));
+            display.appendChild(createDigitImage(parseInt(daysStr[1])));
             
             // Dwukropek
-            clockDiv.appendChild(createColon());
+            display.appendChild(createColon());
             
             // Godziny (2 cyfry)
             const hoursStr = hours.toString().padStart(2, '0');
-            clockDiv.appendChild(createDigit(parseInt(hoursStr[0])));
-            clockDiv.appendChild(createDigit(parseInt(hoursStr[1])));
+            display.appendChild(createDigitImage(parseInt(hoursStr[0])));
+            display.appendChild(createDigitImage(parseInt(hoursStr[1])));
             
             // Dwukropek
-            clockDiv.appendChild(createColon());
+            display.appendChild(createColon());
             
             // Minuty (2 cyfry)
             const minutesStr = minutes.toString().padStart(2, '0');
-            clockDiv.appendChild(createDigit(parseInt(minutesStr[0])));
-            clockDiv.appendChild(createDigit(parseInt(minutesStr[1])));
+            display.appendChild(createDigitImage(parseInt(minutesStr[0])));
+            display.appendChild(createDigitImage(parseInt(minutesStr[1])));
             
             // Dwukropek
-            clockDiv.appendChild(createColon());
+            display.appendChild(createColon());
             
             // Sekundy (2 cyfry)
             const secondsStr = seconds.toString().padStart(2, '0');
-            clockDiv.appendChild(createDigit(parseInt(secondsStr[0])));
-            clockDiv.appendChild(createDigit(parseInt(secondsStr[1])));
+            display.appendChild(createDigitImage(parseInt(secondsStr[0])));
+            display.appendChild(createDigitImage(parseInt(secondsStr[1])));
             
-            // Kropka przed milisekundami
-            clockDiv.appendChild(createMilliDot());
+            // Kropka
+            display.appendChild(createDot());
             
             // Milisekundy (3 cyfry) - mniejsze
             const msStr = milliseconds.toString().padStart(3, '0');
-            clockDiv.appendChild(createDigit(parseInt(msStr[0]), true));
-            clockDiv.appendChild(createDigit(parseInt(msStr[1]), true));
-            clockDiv.appendChild(createDigit(parseInt(msStr[2]), true));
+            display.appendChild(createDigitImage(parseInt(msStr[0]), true));
+            display.appendChild(createDigitImage(parseInt(msStr[1]), true));
+            display.appendChild(createDigitImage(parseInt(msStr[2]), true));
         }
         
         // Funkcja aktualizująca zegar
@@ -370,53 +396,52 @@
                 return;
             }
             
-            // Obliczanie dni, godzin, minut, sekund i milisekund
+            // Obliczanie czasu
             const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
             const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
             const milliseconds = Math.floor(timeRemaining % 1000);
             
-            // Tworzenie/aktualizacja wyświetlacza
-            createClockDisplay(days, hours, minutes, seconds, milliseconds);
+            // Aktualizuj wyświetlacz
+            updateDisplay(days, hours, minutes, seconds, milliseconds);
             
             // Kontynuuj animację
             requestAnimationFrame(updateClock);
         }
         
-        // Inicjalizacja zegara
-        updateClock();
-        
-        // Funkcja zapewniająca, że zegar zawsze jest w jednej linii
-        function ensureSingleLine() {
-            const clock = document.getElementById('clockDisplay');
+        // Funkcja zapewniająca jedną linię
+        function fitToScreen() {
+            const display = document.getElementById('clockDisplay');
             const container = document.querySelector('.clock-container');
             
-            // Resetujemy skalowanie
-            clock.style.transform = 'scale(1)';
+            // Reset
+            display.style.transform = 'scale(1)';
             
-            // Sprawdzamy czy zegar mieści się w kontenerze
-            const clockWidth = clock.scrollWidth;
+            // Sprawdź rozmiary
+            const displayWidth = display.scrollWidth;
             const containerWidth = container.clientWidth;
             
-            // Jeśli zegar jest za szeroki, skalujemy go
-            if (clockWidth > containerWidth * 0.95) {
-                const scale = (containerWidth * 0.95) / clockWidth;
-                clock.style.transform = `scale(${scale})`;
-                clock.style.transformOrigin = 'center center';
+            // Jeśli za szeroki, przeskaluj
+            if (displayWidth > containerWidth * 0.95) {
+                const scale = (containerWidth * 0.9) / displayWidth;
+                display.style.transform = `scale(${scale})`;
+                display.style.transformOrigin = 'center center';
             }
         }
         
-        // Dostosuj rozmiar przy zmianie wielkości okna
-        window.addEventListener('resize', ensureSingleLine);
+        // Inicjalizacja
+        updateClock();
         
-        // Uruchom dostosowanie po załadowaniu
+        // Obsługa zmiany rozmiaru okna
+        window.addEventListener('resize', fitToScreen);
         window.addEventListener('load', () => {
-            setTimeout(ensureSingleLine, 100);
+            setTimeout(fitToScreen, 100);
+            setTimeout(fitToScreen, 500);
         });
         
-        // Uruchom dostosowanie co sekundę (na wypadek animacji)
-        setInterval(ensureSingleLine, 1000);
+        // Regularne dopasowywanie
+        setInterval(fitToScreen, 1000);
     </script>
 </body>
 </html>

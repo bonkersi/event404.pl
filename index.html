@@ -32,12 +32,10 @@ body {
   border: 2px solid #222;
   box-shadow: 0 0 60px rgba(255, 0, 0, 0.6), inset 0 0 40px rgba(0, 0, 0, 0.9);
   overflow: visible;
-  /* CRITICAL: prevent any scaling clipping */
-  transform-origin: center;
   white-space: nowrap;
 }
 
-/* DIGIT CONTAINER */
+/* DIGIT */
 .digit {
   position: relative;
   width: 60px;
@@ -47,42 +45,45 @@ body {
   overflow: visible;
 }
 
-/* ROUNDED LED SEGMENTS */
+/* BUDZIK-STYLE SEGMENTS */
 .seg {
   position: absolute;
-  background: #440000;
-  border-radius: 12px;
-  transition: background 0.1s, box-shadow 0.1s;
+  background: #220000;
+  border-radius: 20px;
+  box-shadow: inset 0 0 4px rgba(255, 60, 60, 0.4);
 }
+
 .on {
   background: #ff0000;
-  /* removed glow, now clean LED */
-  box-shadow: none;
-  position: relative;
+  box-shadow:
+    inset 0 0 6px rgba(255, 120, 120, 0.9),
+    0 0 4px rgba(255, 0, 0, 0.4);
 }
+
+/* internal realistic "budzik" line */
 .on::after {
   content: "";
   position: absolute;
-  inset: 3px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.15);
+  inset: 5px;
+  border-radius: 12px;
+  background: rgba(255, 180, 180, 0.22);
+  pointer-events: none;
 }
 
-/* segment geometry matching the clock photo */
-.seg.a { top: 0; left: 12px; right: 12px; height: 16px; }
-.seg.d { top: 47px; left: 12px; right: 12px; height: 16px; }
-.seg.g { bottom: 0; left: 12px; right: 12px; height: 16px; }
+.seg.a { top: 0; left: 15px; right: 15px; height: 18px; }
+.seg.d { top: 46px; left: 15px; right: 15px; height: 18px; }
+.seg.g { bottom: 0; left: 15px; right: 15px; height: 18px; }
 
-.seg.b { top: 10px; right: 0; width: 16px; height: 45px; }
-.seg.c { bottom: 10px; right: 0; width: 16px; height: 45px; }
-.seg.e { bottom: 10px; left: 0; width: 16px; height: 45px; }
-.seg.f { top: 10px; left: 0; width: 16px; height: 45px; }
+.seg.b { top: 12px; right: 0; width: 18px; height: 44px; }
+.seg.c { bottom: 12px; right: 0; width: 18px; height: 44px; }
+.seg.e { bottom: 12px; left: 0; width: 18px; height: 44px; }
+.seg.f { top: 12px; left: 0; width: 18px; height: 44px; }
 
 .separator {
   color: #ff3333;
   font-size: 90px;
   margin: 0 20px;
-  text-shadow: 0 0 14px #f33;
+  text-shadow: 0 0 8px #f33;
   flex-shrink: 0;
 }
 
@@ -93,16 +94,10 @@ body {
   flex-shrink: 0;
 }
 
-/* SAFE SCALING: container scales but never clips digits */
-@media (max-width: 900px) {
-  .led-display { transform: scale(0.85); }
-}
-@media (max-width: 700px) {
-  .led-display { transform: scale(0.7); }
-}
-@media (max-width: 500px) {
-  .led-display { transform: scale(0.55); }
-}
+/* SAFE RESPONSIVE SCALING */
+@media (max-width: 900px) { .led-display { transform: scale(0.85); } }
+@media (max-width: 700px) { .led-display { transform: scale(0.70); } }
+@media (max-width: 500px) { .led-display { transform: scale(0.55); } }
 </style>
 </head>
 <body>

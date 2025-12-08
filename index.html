@@ -5,186 +5,412 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Odliczanie</title>
     <style>
+        /* RESET I PODSTAWY */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         body {
-            background: #000;
-            color: #f00;
-            font-family: 'Courier New', monospace;
+            background: #000000;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            font-family: 'Arial Black', 'Arial', sans-serif;
         }
         
-        .clock {
+        /* GŁÓWNY KONTENER ZEGARA */
+        .led-clock {
             display: flex;
             align-items: center;
-            background: #111;
-            padding: 20px;
-            border-radius: 10px;
-            border: 2px solid #333;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
-            max-width: 95vw;
+            background: rgba(10, 10, 10, 0.9);
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 
+                0 0 80px rgba(255, 0, 0, 0.6),
+                inset 0 0 40px rgba(0, 0, 0, 0.8),
+                0 0 0 1px rgba(255, 0, 0, 0.2);
+            position: relative;
+            overflow: visible;
+        }
+        
+        /* EFEKT ŚWIECENIA WOKÓŁ ZEGARA */
+        .led-clock::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(255, 0, 0, 0.3) 0%,
+                transparent 70%
+            );
+            border-radius: 20px;
+            z-index: -1;
+            filter: blur(20px);
+        }
+        
+        /* SEGMENT 7-SEGMENTOWY DLA CYFR */
+        .digit-segment {
+            position: relative;
+            width: 1.2em;
+            height: 1.8em;
+            margin: 0 3px;
+            background: linear-gradient(
+                to bottom,
+                #050505 0%,
+                #0a0a0a 50%,
+                #050505 100%
+            );
+            border-radius: 4px;
             overflow: hidden;
         }
         
-        .digit-box {
-            background: #000;
-            border: 1px solid #f00;
-            border-radius: 4px;
-            margin: 0 1px;
-            padding: 10px 5px;
-            min-width: 60px;
-            text-align: center;
-            box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.2);
+        /* KANCIASTA CYFRA 7-SEGMENTOWA */
+        .seven-segment {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Segment7', 'Courier New', monospace;
+            font-weight: 900;
+            font-size: 2.2em;
+            color: #ff0000;
+            text-shadow: 
+                0 0 15px #ff0000,
+                0 0 30px rgba(255, 0, 0, 0.8),
+                0 0 45px rgba(255, 0, 0, 0.5);
+            line-height: 1;
+            letter-spacing: 0;
+            -webkit-text-stroke: 0.5px rgba(255, 100, 100, 0.3);
         }
         
-        .digit {
-            font-size: 80px;
-            font-weight: bold;
-            text-shadow: 0 0 10px #f00;
+        /* EFEKT WEWNĘTRZNY SEGMENTU */
+        .digit-segment::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                rgba(255, 0, 0, 0.05) 10%,
+                rgba(255, 0, 0, 0.02) 50%,
+                rgba(255, 0, 0, 0.05) 90%,
+                transparent 100%
+            );
+            border-radius: 2px;
+            pointer-events: none;
         }
         
-        .separator {
-            font-size: 80px;
+        /* PARY CYFR (np. 12 dni) */
+        .digit-pair {
+            display: flex;
             margin: 0 5px;
-            color: #f00;
-            text-shadow: 0 0 10px #f00;
+        }
+        
+        /* SEPARATORY - KROPKI */
+        .separator-dot {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 2.5em;
+            font-weight: 900;
+            color: #ff3333;
+            margin: 0 8px;
+            text-shadow: 
+                0 0 10px #ff3333,
+                0 0 20px rgba(255, 51, 51, 0.7);
+            position: relative;
+            top: -0.05em;
+            opacity: 0.9;
+        }
+        
+        /* SEPARATOR MILISEKUND - MNIEJSZA KROPKA */
+        .ms-dot {
+            font-size: 2em;
+            color: #cc0000;
+            margin: 0 6px;
+        }
+        
+        /* MILISEKUNDY - MNIEJSZE SEGMENTY */
+        .ms-segment {
+            width: 0.9em;
+            height: 1.4em;
+            margin: 0 2px;
         }
         
         .ms-digit {
-            font-size: 60px;
-            color: #c00;
+            font-size: 1.6em;
+            color: #cc0000;
+            text-shadow: 
+                0 0 10px #cc0000,
+                0 0 20px rgba(204, 0, 0, 0.7);
         }
         
-        .ms-box {
-            min-width: 45px;
-            padding: 10px 3px;
+        /* KONTENER MILISEKUND */
+        .ms-container {
+            display: flex;
+            margin-left: 8px;
+            align-items: center;
         }
         
-        @media (max-width: 768px) {
-            .digit {
-                font-size: 40px;
-            }
-            
-            .separator {
-                font-size: 40px;
-            }
-            
-            .ms-digit {
-                font-size: 30px;
-            }
-            
-            .digit-box {
-                min-width: 40px;
-                padding: 8px 3px;
-            }
-            
-            .ms-box {
-                min-width: 30px;
-                padding: 8px 2px;
-            }
-            
-            .clock {
-                padding: 15px;
+        /* EFEKT GRIDU LCD */
+        .lcd-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255, 255, 255, 0.03) 0px,
+                    rgba(255, 255, 255, 0.03) 1px,
+                    transparent 1px,
+                    transparent 4px
+                );
+            pointer-events: none;
+            border-radius: 15px;
+            opacity: 0.4;
+        }
+        
+        /* LINIA SKANUJĄCA */
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 0, 0, 0.6),
+                transparent
+            );
+            animation: scan 4s linear infinite;
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+        }
+        
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        
+        /* RESPONSYWNOŚĆ - TELEFONY PIONOWO */
+        @media (max-width: 768px) and (orientation: portrait) {
+            .led-clock {
+                padding: 20px 25px;
                 transform: scale(0.9);
             }
-        }
-        
-        @media (max-width: 480px) {
-            .digit {
-                font-size: 30px;
+            
+            .digit-segment {
+                width: 0.9em;
+                height: 1.4em;
+                margin: 0 2px;
             }
             
-            .separator {
-                font-size: 30px;
-                margin: 0 3px;
+            .seven-segment {
+                font-size: 1.8em;
+            }
+            
+            .separator-dot {
+                font-size: 2em;
+                margin: 0 6px;
+            }
+            
+            .ms-segment {
+                width: 0.7em;
+                height: 1.1em;
+                margin: 0 1px;
             }
             
             .ms-digit {
-                font-size: 22px;
+                font-size: 1.3em;
             }
             
-            .digit-box {
-                min-width: 30px;
-                padding: 6px 2px;
-            }
-            
-            .ms-box {
-                min-width: 22px;
-                padding: 6px 1px;
-            }
-            
-            .clock {
-                padding: 10px;
-                transform: scale(0.85);
+            .ms-dot {
+                font-size: 1.6em;
+                margin: 0 4px;
             }
         }
         
-        @media (max-width: 320px) {
-            .clock {
-                transform: scale(0.75);
+        /* TELEFONY POZIOMO */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .led-clock {
+                padding: 15px 20px;
+            }
+            
+            .digit-segment {
+                width: 1em;
+                height: 1.5em;
+                margin: 0 2px;
+            }
+            
+            .seven-segment {
+                font-size: 2em;
+            }
+            
+            .separator-dot {
+                font-size: 2.2em;
+                margin: 0 5px;
+            }
+        }
+        
+        /* BARDZO MAŁE TELEFONY */
+        @media (max-width: 360px) {
+            .led-clock {
+                padding: 15px 18px;
+                transform: scale(0.85);
+            }
+            
+            .digit-segment {
+                width: 0.8em;
+                height: 1.2em;
+                margin: 0 1px;
+            }
+            
+            .seven-segment {
+                font-size: 1.6em;
+            }
+            
+            .separator-dot {
+                font-size: 1.8em;
+                margin: 0 4px;
+            }
+        }
+        
+        /* DUŻE EKRANY */
+        @media (min-width: 1200px) {
+            .led-clock {
+                padding: 30px 40px;
+            }
+            
+            .digit-segment {
+                width: 1.5em;
+                height: 2.2em;
+                margin: 0 4px;
+            }
+            
+            .seven-segment {
+                font-size: 2.8em;
+            }
+            
+            .separator-dot {
+                font-size: 3em;
+                margin: 0 10px;
+            }
+        }
+        
+        /* DYNAMICZNE DOSTOSOWANIE ROZMIARU */
+        .clock-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            overflow: hidden;
+        }
+    </style>
+    <!-- CZcionka Segment7 dla autentycznego wyglądu -->
+    <style>
+        @font-face {
+            font-family: 'Segment7';
+            src: url('https://cdn.jsdelivr.net/npm/segment7-font@1.0.0/segment7.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        /* Fallback dla Segment7 */
+        .seven-segment {
+            font-family: 'Segment7', 'Courier New', monospace;
+        }
+        
+        /* Jeśli Segment7 nie działa, użyj Courier z efektem */
+        @supports not (font-family: 'Segment7') {
+            .seven-segment {
+                font-family: 'Courier New', monospace;
+                letter-spacing: -0.05em;
+                transform: scale(1, 1.2); /* Spłaszczone, kanciaste cyfry */
             }
         }
     </style>
 </head>
 <body>
-    <div class="clock">
-        <!-- Dni -->
-        <div class="digit-box">
-            <span class="digit" id="d1">0</span>
-        </div>
-        <div class="digit-box">
-            <span class="digit" id="d2">0</span>
-        </div>
-        
-        <span class="separator">:</span>
-        
-        <!-- Godziny -->
-        <div class="digit-box">
-            <span class="digit" id="h1">0</span>
-        </div>
-        <div class="digit-box">
-            <span class="digit" id="h2">0</span>
-        </div>
-        
-        <span class="separator">:</span>
-        
-        <!-- Minuty -->
-        <div class="digit-box">
-            <span class="digit" id="m1">0</span>
-        </div>
-        <div class="digit-box">
-            <span class="digit" id="m2">0</span>
-        </div>
-        
-        <span class="separator">:</span>
-        
-        <!-- Sekundy -->
-        <div class="digit-box">
-            <span class="digit" id="s1">0</span>
-        </div>
-        <div class="digit-box">
-            <span class="digit" id="s2">0</span>
-        </div>
-        
-        <span class="separator">.</span>
-        
-        <!-- Milisekundy -->
-        <div class="digit-box ms-box">
-            <span class="digit ms-digit" id="ms1">0</span>
-        </div>
-        <div class="digit-box ms-box">
-            <span class="digit ms-digit" id="ms2">0</span>
-        </div>
-        <div class="digit-box ms-box">
-            <span class="digit ms-digit" id="ms3">0</span>
+    <div class="clock-wrapper">
+        <div class="led-clock" id="clock">
+            <div class="scanline"></div>
+            <div class="lcd-grid"></div>
+            
+            <!-- DNI -->
+            <div class="digit-pair">
+                <div class="digit-segment">
+                    <div class="seven-segment" id="day-tens">8</div>
+                </div>
+                <div class="digit-segment">
+                    <div class="seven-segment" id="day-ones">8</div>
+                </div>
+            </div>
+            
+            <div class="separator-dot">:</div>
+            
+            <!-- GODZINY -->
+            <div class="digit-pair">
+                <div class="digit-segment">
+                    <div class="seven-segment" id="hour-tens">8</div>
+                </div>
+                <div class="digit-segment">
+                    <div class="seven-segment" id="hour-ones">8</div>
+                </div>
+            </div>
+            
+            <div class="separator-dot">:</div>
+            
+            <!-- MINUTY -->
+            <div class="digit-pair">
+                <div class="digit-segment">
+                    <div class="seven-segment" id="min-tens">8</div>
+                </div>
+                <div class="digit-segment">
+                    <div class="seven-segment" id="min-ones">8</div>
+                </div>
+            </div>
+            
+            <div class="separator-dot">:</div>
+            
+            <!-- SEKUNDY -->
+            <div class="digit-pair">
+                <div class="digit-segment">
+                    <div class="seven-segment" id="sec-tens">8</div>
+                </div>
+                <div class="digit-segment">
+                    <div class="seven-segment" id="sec-ones">8</div>
+                </div>
+            </div>
+            
+            <div class="separator-dot ms-dot">.</div>
+            
+            <!-- MILISEKUNDY -->
+            <div class="ms-container">
+                <div class="digit-segment ms-segment">
+                    <div class="seven-segment ms-digit" id="ms-hundreds">8</div>
+                </div>
+                <div class="digit-segment ms-segment">
+                    <div class="seven-segment ms-digit" id="ms-tens">8</div>
+                </div>
+                <div class="digit-segment ms-segment">
+                    <div class="seven-segment ms-digit" id="ms-ones">8</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -192,84 +418,143 @@
         // Ustaw odliczanie na 6 miesięcy
         const targetDate = new Date();
         targetDate.setMonth(targetDate.getMonth() + 6);
+        targetDate.setHours(12, 0, 0, 0); // Ustaw na południe dla dokładności
         
-        function updateClock() {
-            const now = new Date();
-            const diff = targetDate - now;
+        // Funkcja skalowania zegara
+        function scaleClock() {
+            const clock = document.getElementById('clock');
+            const wrapper = document.querySelector('.clock-wrapper');
             
-            if (diff <= 0) {
-                setZero();
+            if (!clock || !wrapper) return;
+            
+            const maxWidth = wrapper.clientWidth * 0.95;
+            const maxHeight = wrapper.clientHeight * 0.95;
+            const clockWidth = clock.scrollWidth;
+            const clockHeight = clock.scrollHeight;
+            
+            let scale = 1;
+            
+            // Oblicz skalowanie jeśli zegar jest za duży
+            if (clockWidth > maxWidth || clockHeight > maxHeight) {
+                const scaleX = maxWidth / clockWidth;
+                const scaleY = maxHeight / clockHeight;
+                scale = Math.min(scaleX, scaleY) * 0.98;
+            }
+            
+            // Ograniczenia skalowania
+            scale = Math.min(scale, 1.2);  // Nie powiększaj ponad 120%
+            scale = Math.max(scale, 0.6);  // Nie pomniejszaj poniżej 60%
+            
+            // Zastosuj skalowanie
+            clock.style.transform = `scale(${scale})`;
+            clock.style.transformOrigin = 'center';
+            
+            return scale;
+        }
+        
+        // Główna funkcja odliczania
+        function updateCountdown() {
+            const now = Date.now();
+            const timeLeft = targetDate - now;
+            
+            // Jeśli czas minął
+            if (timeLeft <= 0) {
+                showAllEights(); // Pokazuje "88888888.888" jak w testach LCD
                 return;
             }
             
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            const ms = Math.floor(diff % 1000);
+            // Obliczenia czasu
+            const totalSeconds = Math.floor(timeLeft / 1000);
+            const days = Math.floor(totalSeconds / (3600 * 24));
+            const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            const milliseconds = timeLeft % 1000;
             
-            const daysStr = days.toString().padStart(2, '0');
-            const hoursStr = hours.toString().padStart(2, '0');
-            const minutesStr = minutes.toString().padStart(2, '0');
-            const secondsStr = seconds.toString().padStart(2, '0');
-            const msStr = ms.toString().padStart(3, '0');
+            // Formatowanie na osobne cyfry
+            const formatNumber = (num, length) => {
+                return num.toString().padStart(length, '0');
+            };
             
-            // Dni
-            document.getElementById('d1').textContent = daysStr[0];
-            document.getElementById('d2').textContent = daysStr[1];
+            // Aktualizacja wyświetlacza
+            const daysStr = formatNumber(days, 2);
+            const hoursStr = formatNumber(hours, 2);
+            const minutesStr = formatNumber(minutes, 2);
+            const secondsStr = formatNumber(seconds, 2);
+            const msStr = formatNumber(Math.floor(milliseconds), 3);
             
-            // Godziny
-            document.getElementById('h1').textContent = hoursStr[0];
-            document.getElementById('h2').textContent = hoursStr[1];
+            document.getElementById('day-tens').textContent = daysStr[0];
+            document.getElementById('day-ones').textContent = daysStr[1];
+            document.getElementById('hour-tens').textContent = hoursStr[0];
+            document.getElementById('hour-ones').textContent = hoursStr[1];
+            document.getElementById('min-tens').textContent = minutesStr[0];
+            document.getElementById('min-ones').textContent = minutesStr[1];
+            document.getElementById('sec-tens').textContent = secondsStr[0];
+            document.getElementById('sec-ones').textContent = secondsStr[1];
+            document.getElementById('ms-hundreds').textContent = msStr[0];
+            document.getElementById('ms-tens').textContent = msStr[1];
+            document.getElementById('ms-ones').textContent = msStr[2];
             
-            // Minuty
-            document.getElementById('m1').textContent = minutesStr[0];
-            document.getElementById('m2').textContent = minutesStr[1];
-            
-            // Sekundy
-            document.getElementById('s1').textContent = secondsStr[0];
-            document.getElementById('s2').textContent = secondsStr[1];
-            
-            // Milisekundy
-            document.getElementById('ms1').textContent = msStr[0];
-            document.getElementById('ms2').textContent = msStr[1];
-            document.getElementById('ms3').textContent = msStr[2];
-            
-            // Miganie separatorów
-            const separators = document.querySelectorAll('.separator');
+            // Miganie separatorów (co 500ms)
+            const separators = document.querySelectorAll('.separator-dot');
+            const blinkOn = milliseconds < 500;
             separators.forEach(sep => {
-                sep.style.opacity = ms < 500 ? '1' : '0.5';
+                sep.style.opacity = blinkOn ? '1' : '0.7';
+                sep.style.textShadow = blinkOn ? 
+                    '0 0 10px #ff3333, 0 0 20px rgba(255, 51, 51, 0.7)' :
+                    '0 0 5px #ff3333, 0 0 10px rgba(255, 51, 51, 0.5)';
             });
         }
         
-        function setZero() {
-            document.querySelectorAll('.digit').forEach(d => d.textContent = '0');
-            document.querySelectorAll('.separator').forEach(s => s.style.opacity = '0.5');
-        }
-        
-        // Start
-        setInterval(updateClock, 10);
-        updateClock();
-        
-        // Dostosowanie rozmiaru
-        function adjustSize() {
-            const clock = document.querySelector('.clock');
-            const body = document.body;
+        // Funkcja pokazująca wszystkie ósemki (test LCD)
+        function showAllEights() {
+            const allDigits = document.querySelectorAll('.seven-segment');
+            allDigits.forEach(digit => {
+                digit.textContent = '8';
+                digit.style.color = '#ff3333';
+            });
             
-            if (clock.scrollWidth > body.clientWidth * 0.95) {
-                const scale = (body.clientWidth * 0.95) / clock.scrollWidth;
-                clock.style.transform = `scale(${Math.max(scale, 0.5)})`;
-            } else {
-                clock.style.transform = 'scale(1)';
-            }
+            // Separatory pełne
+            document.querySelectorAll('.separator-dot').forEach(sep => {
+                sep.style.opacity = '1';
+            });
         }
         
-        window.addEventListener('resize', adjustSize);
-        window.addEventListener('load', adjustSize);
-        adjustSize();
+        // Inicjalizacja
+        function init() {
+            // Start odliczania (co 10ms dla płynnych milisekund)
+            setInterval(updateCountdown, 10);
+            updateCountdown();
+            
+            // Początkowe skalowanie
+            setTimeout(scaleClock, 100);
+            
+            // Obsługa zmiany rozmiaru okna
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(scaleClock, 150);
+            });
+            
+            // Obsługa zmiany orientacji
+            window.addEventListener('orientationchange', () => {
+                setTimeout(scaleClock, 300);
+            });
+            
+            // Dodatkowe skalowanie po załadowaniu
+            window.addEventListener('load', () => {
+                setTimeout(scaleClock, 200);
+                setTimeout(scaleClock, 500);
+            });
+            
+            // Logowanie informacji
+            console.log('🎯 Odliczanie startuje!');
+            console.log('⏰ Czas końca:', targetDate.toLocaleString('pl-PL'));
+            console.log('📱 Rozdzielczość:', window.innerWidth, 'x', window.innerHeight);
+        }
         
-        console.log('Odliczanie startuje...');
-        console.log('Koniec:', targetDate.toLocaleString());
+        // Uruchomienie
+        init();
     </script>
 </body>
 </html>

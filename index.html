@@ -10,7 +10,7 @@
     <style>
         :root {
             --digit-color: #ff0000;
-            --digit-glow: rgba(255, 0, 0, 0.7);
+            --digit-glow: rgba(255, 0, 0, 0.8);
             --bg-color: #000000;
         }
         
@@ -45,33 +45,26 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            padding: 20px;
         }
         
         .clock-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1px;
-            background: #111;
-            padding: 10px 15px;
-            border-radius: 6px;
+            gap: 2px;
+            background: #0a0a0a;
+            padding: 20px 25px;
+            border-radius: 10px;
             box-shadow: 
-                0 0 0 1px #222,
-                0 0 30px var(--digit-glow),
-                inset 0 0 15px rgba(255, 0, 0, 0.1);
+                0 0 0 2px #222,
+                0 0 50px var(--digit-glow),
+                inset 0 0 30px rgba(255, 0, 0, 0.15);
             position: relative;
             min-width: min-content;
             white-space: nowrap;
             transform-origin: center;
-        }
-        
-        /* Absolute positioning to ensure single line */
-        .clock-container-inner {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            width: 100%;
+            border: 1px solid #333;
         }
         
         .digit-container {
@@ -81,54 +74,45 @@
         
         .segment-display {
             position: relative;
-            background: #0a0a0a;
-            border-radius: 3px;
-            margin: 0 0.5px;
+            background: #050505;
+            border-radius: 4px;
+            margin: 0 1px;
             overflow: hidden;
-            min-width: 0.6em;
+            min-width: 1.2em;
             text-align: center;
+            padding: 5px 3px;
+            box-shadow: 
+                inset 0 0 10px rgba(0, 0, 0, 0.8),
+                0 0 5px rgba(255, 0, 0, 0.2);
         }
         
-        /* 7-segment LED effect */
+        /* WIĘKSZE CYFRY - optymalizacja */
         .led-digit {
             font-family: 'Share Tech Mono', monospace;
             font-weight: 900;
             color: var(--digit-color);
             text-shadow: 
-                0 0 5px var(--digit-color),
-                0 0 15px var(--digit-glow);
+                0 0 10px var(--digit-color),
+                0 0 20px var(--digit-glow),
+                0 0 30px rgba(255, 0, 0, 0.5);
             line-height: 1;
             position: relative;
             display: inline-block;
             text-align: center;
+            font-size: calc(10vw + 10vh); /* Dynamiczny rozmiar */
+            min-width: 0.7em;
         }
         
-        /* Segment effect for each digit */
-        .led-digit::before {
-            content: '';
-            position: absolute;
-            top: 10%;
-            left: 5%;
-            right: 5%;
-            bottom: 10%;
-            background: linear-gradient(
-                to bottom,
-                rgba(255, 0, 0, 0.05) 0%,
-                rgba(255, 0, 0, 0.02) 50%,
-                rgba(255, 0, 0, 0.05) 100%
-            );
-            border-radius: 1px;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
+        /* Większe separatory */
         .separator {
             color: #ff3333;
-            text-shadow: 0 0 5px #ff3333;
-            font-weight: 700;
-            margin: 0 1px;
+            text-shadow: 0 0 10px #ff3333;
+            font-weight: 900;
+            margin: 0 3px;
             line-height: 1;
             opacity: 0.9;
+            font-size: calc(8vw + 8vh);
+            padding-bottom: 0.1em;
         }
         
         .colon {
@@ -137,47 +121,61 @@
         
         .dot {
             color: #990000;
-            font-size: 80%;
-            margin: 0 0.5px;
+            margin: 0 2px;
         }
         
-        /* Miliseconds container - slightly smaller */
+        /* Milisekundy - większe ale trochę mniejsze niż główne cyfry */
         .ms-container {
             display: inline-flex;
-            gap: 0.5px;
-            margin-left: 1px;
+            gap: 1px;
+            margin-left: 3px;
+            align-items: flex-end;
         }
         
         .ms-digit {
-            font-size: 85%;
             color: #cc0000;
-            text-shadow: 0 0 3px #cc0000;
+            text-shadow: 0 0 8px #cc0000;
+            font-size: calc(5vw + 5vh);
         }
         
-        /* Glowing border effect */
-        .clock-container::before {
+        /* Segment display effect */
+        .led-digit::before {
             content: '';
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, 
-                transparent 0%, 
-                rgba(255, 0, 0, 0.1) 50%, 
-                transparent 100%);
-            border-radius: 8px;
+            top: 15%;
+            left: 10%;
+            right: 10%;
+            bottom: 15%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 0, 0, 0.1) 0%,
+                rgba(255, 0, 0, 0.05) 50%,
+                rgba(255, 0, 0, 0.1) 100%
+            );
+            border-radius: 2px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Glowing effect */
+        .glow-effect {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(255, 0, 0, 0.2) 0%,
+                transparent 70%
+            );
+            border-radius: 15px;
             z-index: -1;
-            animation: pulse 4s infinite;
+            filter: blur(10px);
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 0.8; }
-        }
-        
-        /* LCD grid overlay */
-        .lcd-overlay {
+        /* LCD effect */
+        .lcd-effect {
             position: absolute;
             top: 0;
             left: 0;
@@ -186,6 +184,13 @@
             background: 
                 repeating-linear-gradient(
                     0deg,
+                    rgba(255, 255, 255, 0.03) 0px,
+                    rgba(255, 255, 255, 0.03) 1px,
+                    transparent 1px,
+                    transparent 2px
+                ),
+                repeating-linear-gradient(
+                    90deg,
                     rgba(255, 255, 255, 0.02) 0px,
                     rgba(255, 255, 255, 0.02) 1px,
                     transparent 1px,
@@ -193,57 +198,132 @@
                 );
             pointer-events: none;
             z-index: 1;
-            border-radius: 6px;
+            border-radius: 10px;
+            opacity: 0.5;
         }
         
-        /* Auto-scaling system */
-        .auto-scale {
-            transition: transform 0.1s linear;
+        /* Scan line */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(
+                to right,
+                transparent,
+                rgba(255, 0, 0, 0.4),
+                transparent
+            );
+            animation: scan 3s linear infinite;
+            z-index: 2;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
         }
         
-        /* No wrap protection */
-        .no-wrap {
-            white-space: nowrap;
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        
+        /* Nowe: Kontener wewnętrzny dla lepszego wyśrodkowania */
+        .clock-inner {
             display: flex;
-            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 3;
         }
         
-        /* For very small screens */
-        @media (max-width: 320px) {
+        /* Media queries dla lepszego skalowania */
+        @media (max-width: 768px) {
+            .clock-wrapper {
+                padding: 10px;
+            }
+            
             .clock-container {
-                padding: 8px 12px;
-                gap: 0.5px;
+                padding: 15px 20px;
+                gap: 1px;
+            }
+            
+            .led-digit {
+                font-size: calc(12vw + 8vh);
             }
             
             .separator {
-                margin: 0 0.5px;
+                font-size: calc(10vw + 6vh);
+                margin: 0 2px;
             }
             
             .ms-digit {
-                font-size: 75%;
+                font-size: calc(6vw + 4vh);
             }
         }
         
-        /* For very large screens */
-        @media (min-width: 2000px) {
+        @media (max-width: 480px) {
             .clock-container {
-                padding: 20px 30px;
-                gap: 2px;
+                padding: 10px 15px;
+                border-radius: 8px;
+            }
+            
+            .segment-display {
+                padding: 3px 2px;
+                margin: 0 0.5px;
+            }
+            
+            .led-digit {
+                font-size: calc(14vw + 6vh);
+            }
+            
+            .separator {
+                font-size: calc(12vw + 4vh);
+                margin: 0 1px;
             }
         }
         
-        /* Ensure no vertical overflow */
-        .no-vertical-overflow {
-            max-height: 100vh;
-            overflow-y: hidden;
+        /* Dla bardzo małych ekranów */
+        @media (max-height: 500px) {
+            .led-digit {
+                font-size: calc(15vw + 5vh);
+            }
+            
+            .separator {
+                font-size: calc(13vw + 3vh);
+            }
+        }
+        
+        /* Dla dużych ekranów */
+        @media (min-width: 1200px) {
+            .led-digit {
+                font-size: calc(8vw + 12vh);
+            }
+            
+            .separator {
+                font-size: calc(6vw + 10vh);
+            }
+            
+            .clock-container {
+                padding: 30px 40px;
+                gap: 3px;
+            }
+        }
+        
+        /* Zapewnienie pojedynczej linii */
+        .single-line {
+            display: flex;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+            overflow: visible;
         }
     </style>
 </head>
-<body class="no-vertical-overflow">
+<body>
     <div class="clock-wrapper">
-        <div class="clock-container auto-scale" id="clock">
-            <div class="clock-container-inner no-wrap">
-                <!-- DNI (2 cyfry) -->
+        <div class="glow-effect"></div>
+        <div class="clock-container" id="clock">
+            <div class="scan-line"></div>
+            <div class="lcd-effect"></div>
+            <div class="clock-inner single-line">
+                <!-- DNI -->
                 <div class="digit-container">
                     <div class="segment-display">
                         <span class="led-digit" id="days-tens">0</span>
@@ -257,7 +337,7 @@
                 
                 <span class="separator blink">:</span>
                 
-                <!-- GODZINY (2 cyfry) -->
+                <!-- GODZINY -->
                 <div class="digit-container">
                     <div class="segment-display">
                         <span class="led-digit" id="hours-tens">0</span>
@@ -271,7 +351,7 @@
                 
                 <span class="separator blink colon">:</span>
                 
-                <!-- MINUTY (2 cyfry) -->
+                <!-- MINUTY -->
                 <div class="digit-container">
                     <div class="segment-display">
                         <span class="led-digit" id="minutes-tens">0</span>
@@ -285,7 +365,7 @@
                 
                 <span class="separator blink">:</span>
                 
-                <!-- SEKUNDY (2 cyfry) -->
+                <!-- SEKUNDY -->
                 <div class="digit-container">
                     <div class="segment-display">
                         <span class="led-digit" id="seconds-tens">0</span>
@@ -299,7 +379,7 @@
                 
                 <span class="separator dot blink">.</span>
                 
-                <!-- MILISEKUNDY (3 cyfry) -->
+                <!-- MILISEKUNDY -->
                 <div class="ms-container">
                     <div class="digit-container">
                         <div class="segment-display">
@@ -318,63 +398,57 @@
                     </div>
                 </div>
             </div>
-            <div class="lcd-overlay"></div>
         </div>
     </div>
 
     <script>
-        // Ustaw odliczanie na 6 miesięcy od teraz
+        // Ustaw odliczanie na 6 miesięcy
         const targetDate = new Date();
         targetDate.setMonth(targetDate.getMonth() + 6);
         
-        // Zmienne do skalowania
-        let lastScale = 1;
-        let resizeTimeout;
-        
-        // Funkcja do dynamicznego skalowania
-        function autoScaleClock() {
+        // Funkcja do optymalnego skalowania
+        function optimizeSize() {
             const clock = document.getElementById('clock');
             const wrapper = document.querySelector('.clock-wrapper');
             
             if (!clock || !wrapper) return;
             
-            const wrapperWidth = wrapper.clientWidth;
-            const wrapperHeight = wrapper.clientHeight;
+            const maxWidth = wrapper.clientWidth * 0.95;
+            const maxHeight = wrapper.clientHeight * 0.95;
             const clockWidth = clock.scrollWidth;
             const clockHeight = clock.scrollHeight;
             
-            // Oblicz współczynnik skalowania dla szerokości i wysokości
-            const scaleX = (wrapperWidth * 0.95) / clockWidth;
-            const scaleY = (wrapperHeight * 0.95) / clockHeight;
+            // Oblicz skalowanie
+            let scale = 1;
             
-            // Użyj mniejszego współczynnika, aby zmieścić się w obu wymiarach
-            let scale = Math.min(scaleX, scaleY);
-            
-            // Ograniczenia skalowania
-            scale = Math.min(scale, 1); // Nie powiększaj ponad 100%
-            scale = Math.max(scale, 0.1); // Nie zmniejszaj poniżej 10%
-            
-            // Zaokrąglij dla płynności
-            scale = Math.round(scale * 100) / 100;
-            
-            // Tylko jeśli zmiana jest znacząca
-            if (Math.abs(scale - lastScale) > 0.01) {
-                clock.style.transform = `scale(${scale})`;
-                lastScale = scale;
+            if (clockWidth > maxWidth || clockHeight > maxHeight) {
+                const scaleX = maxWidth / clockWidth;
+                const scaleY = maxHeight / clockHeight;
+                scale = Math.min(scaleX, scaleY);
             }
+            
+            // Ograniczenia
+            scale = Math.min(scale, 1.5); // Maksymalne powiększenie
+            scale = Math.max(scale, 0.4); // Minimalne pomniejszenie
+            
+            // Zaokrąglij i zastosuj
+            scale = Math.round(scale * 100) / 100;
+            clock.style.transform = `scale(${scale})`;
+            
+            return scale;
         }
         
-        // Funkcja aktualizacji odliczania z milisekundami
+        // Funkcja odliczania
         function updateCountdown() {
             const now = Date.now();
             const timeLeft = targetDate.getTime() - now;
             
             if (timeLeft <= 0) {
-                resetToZeros();
+                setAllToZero();
                 return;
             }
             
-            // Obliczenia z milisekundami
+            // Obliczenia
             const totalSeconds = Math.floor(timeLeft / 1000);
             const days = Math.floor(totalSeconds / (3600 * 24));
             const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
@@ -382,14 +456,14 @@
             const seconds = totalSeconds % 60;
             const milliseconds = timeLeft % 1000;
             
-            // Formatowanie na osobne cyfry
+            // Formatowanie
             const daysStr = days.toString().padStart(2, '0');
             const hoursStr = hours.toString().padStart(2, '0');
             const minutesStr = minutes.toString().padStart(2, '0');
             const secondsStr = seconds.toString().padStart(2, '0');
             const msStr = Math.floor(milliseconds).toString().padStart(3, '0');
             
-            // Aktualizacja wyświetlacza
+            // Aktualizacja
             document.getElementById('days-tens').textContent = daysStr[0];
             document.getElementById('days-ones').textContent = daysStr[1];
             document.getElementById('hours-tens').textContent = hoursStr[0];
@@ -402,55 +476,61 @@
             document.getElementById('ms-tens').textContent = msStr[1];
             document.getElementById('ms-ones').textContent = msStr[2];
             
-            // Miganie separatorów w rytmie milisekund
-            const separators = document.querySelectorAll('.separator');
-            const blink = milliseconds < 500;
-            separators.forEach(sep => {
-                sep.style.opacity = blink ? '1' : '0.7';
+            // Miganie separatorów
+            const blinkOn = milliseconds < 500;
+            document.querySelectorAll('.separator').forEach(sep => {
+                sep.style.opacity = blinkOn ? '1' : '0.6';
             });
         }
         
-        // Reset na zera
-        function resetToZeros() {
-            const digits = document.querySelectorAll('.led-digit');
-            digits.forEach(digit => digit.textContent = '0');
-            document.querySelectorAll('.separator').forEach(sep => sep.style.opacity = '0.7');
+        function setAllToZero() {
+            document.querySelectorAll('.led-digit').forEach(digit => {
+                digit.textContent = '0';
+            });
+            document.querySelectorAll('.separator').forEach(sep => {
+                sep.style.opacity = '0.6';
+            });
         }
         
         // Inicjalizacja
         function init() {
-            // Uruchom odliczanie co 10ms dla płynnych milisekund
+            // Odliczanie
             setInterval(updateCountdown, 10);
+            updateCountdown();
             
-            // Skaluj początkowo
-            autoScaleClock();
+            // Skalowanie
+            optimizeSize();
             
-            // Obsługa zmiany rozmiaru okna z debouncing
+            // Event listeners
             window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(autoScaleClock, 50);
+                setTimeout(optimizeSize, 50);
             });
             
-            // Obsługa zmiany orientacji
             window.addEventListener('orientationchange', () => {
-                setTimeout(autoScaleClock, 100);
+                setTimeout(() => {
+                    optimizeSize();
+                }, 200);
             });
             
-            // Wymuś ponowne skalowanie po załadowaniu
+            // Wymuś ponowną optymalizację po załadowaniu
             window.addEventListener('load', () => {
-                setTimeout(autoScaleClock, 100);
+                setTimeout(optimizeSize, 100);
+                setTimeout(optimizeSize, 500); // Podwójne sprawdzenie
             });
             
-            // Log info
+            // Dodatkowe cykliczne sprawdzanie
+            setInterval(optimizeSize, 2000);
+            
             console.log('Odliczanie zakończy się:', targetDate.toLocaleString('pl-PL'));
-            console.log('Start czasu:', new Date().toLocaleString('pl-PL'));
         }
         
-        // Uruchom
+        // Start
         init();
         
-        // Dodatkowe zabezpieczenie - cykliczne sprawdzanie rozmiaru
-        setInterval(autoScaleClock, 1000);
+        // Dodatkowe: dynamiczne dostosowanie po interakcji
+        document.addEventListener('click', () => {
+            setTimeout(optimizeSize, 100);
+        });
     </script>
 </body>
 </html>

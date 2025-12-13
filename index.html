@@ -33,10 +33,11 @@ body {
 .led-display {
   display: flex;
   align-items: center;
-  background: #0a0a0a;
-  padding: 15px 20px;
-  border-radius: 12px;
-  border: 1px solid #333;
+  /* USUNIĘTE TŁO I OBRAMOWANIE - teraz cyfry będą bez tła i obramowania */
+  /* background: #0a0a0a; */
+  /* padding: 15px 20px; */
+  /* border-radius: 12px; */
+  /* border: 1px solid #333; */
   min-width: min-content;
   white-space: nowrap;
   flex-wrap: nowrap;
@@ -55,13 +56,13 @@ body {
 /* CLASSIC THIN SEGMENTS - like old digital clock */
 .seg {
   position: absolute;
-  background: #220000;
+  background: #333; /* ZMIENIONE Z #220000 NA #333 */
   border-radius: 2px;
 }
 
 .on {
-  background: #ff0000;
-  box-shadow: 0 0 5px #ff0000;
+  background: #ffffff; /* ZMIENIONE Z #ff0000 NA #ffffff */
+  box-shadow: 0 0 5px #ffffff; /* ZMIENIONE Z #ff0000 NA #ffffff */
 }
 
 /* Very subtle inner highlight */
@@ -129,7 +130,7 @@ body {
   left: 2px;
   right: 2px;
   bottom: 1px;
-  background: rgba(255, 180, 180, 0.15);
+  background: rgba(255, 255, 255, 0.2); /* ZMIENIONE NA BIAŁY Z 0.2 PRZEZROCZYSTOŚCIĄ */
   border-radius: 1px;
 }
 .seg.d.on::after {
@@ -137,7 +138,7 @@ body {
   left: 2px;
   right: 2px;
   bottom: 2px;
-  background: rgba(255, 180, 180, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 1px;
 }
 .seg.g.on::after {
@@ -145,7 +146,7 @@ body {
   left: 2px;
   right: 2px;
   bottom: 2px;
-  background: rgba(255, 180, 180, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 1px;
 }
 
@@ -156,7 +157,7 @@ body {
   left: 1px;
   right: 2px;
   bottom: 2px;
-  background: rgba(255, 180, 180, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 1px;
 }
 .seg.e.on::after,
@@ -165,12 +166,12 @@ body {
   left: 2px;
   right: 1px;
   bottom: 2px;
-  background: rgba(255, 180, 180, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 1px;
 }
 
 .separator {
-  color: #ff0000;
+  color: #ffffff; /* ZMIENIONE Z #ff0000 NA #ffffff */
   font-size: 70px;
   margin: 0 10px;
   font-weight: normal;
@@ -179,7 +180,7 @@ body {
 }
 
 .ms-dot {
-  color: #ff0000;
+  color: #ffffff; /* ZMIENIONE Z #ff0000 NA #ffffff */
   font-size: 50px;
   margin: 0 8px;
   opacity: 0.7;
@@ -224,7 +225,7 @@ body {
   .seg.c, .seg.e { bottom: 3px; height: 32px; }
   .separator { font-size: 40px; margin: 0 5px; }
   .ms-dot { font-size: 30px; margin: 0 4px; }
-  .led-display { padding: 10px 15px; }
+  /* USUNIĘTE: .led-display { padding: 10px 15px; } */
 }
 
 @media (max-width: 700px) {
@@ -238,7 +239,7 @@ body {
   .seg.c, .seg.e { bottom: 2px; height: 25px; }
   .separator { font-size: 32px; margin: 0 4px; }
   .ms-dot { font-size: 24px; margin: 0 3px; }
-  .led-display { padding: 8px 12px; }
+  /* USUNIĘTE: .led-display { padding: 8px 12px; } */
 }
 
 @media (max-width: 500px) {
@@ -252,7 +253,7 @@ body {
   .seg.c, .seg.e { bottom: 2px; height: 20px; }
   .separator { font-size: 26px; margin: 0 3px; }
   .ms-dot { font-size: 20px; margin: 0 2px; }
-  .led-display { padding: 6px 10px; }
+  /* USUNIĘTE: .led-display { padding: 6px 10px; } */
 }
 </style>
 </head>
